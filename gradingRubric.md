@@ -1,6 +1,7 @@
 # Grading
 
 In this creative project, we will try to implement a online ordering website, using Python/Django.
+This grading rubric was approved by **Andrew McNeel** on Nov 15.
 
 ## Misc (30 points) 
 
