@@ -41,22 +41,32 @@ users can view all dishes that a restaurant provides (5 points)
 
 Users can modify their cart in the cart management page, including the number of a dish or delete something they don't want. (5 points)
 
-Uers can place orders which would be sent to the restaurant management page for restaurant keepers to see. (5 points)
+Users can place orders which would be sent to the restaurant management page for restaurant keepers to see. (5 points)
 
-##  Restaurant Management (20 points)
+## Best Practice (20 points)
 
-Restaurant Keepers are able to check all orders with different status including pending, confirmed, completed orders, seperately or together. (10 points)
+Code is well formatted and easy to read, with proper commenting (3 points)
+
+Safe from SQL Injection attacks (2 points)
+
+Site follows the FIEO philosophy (3 points)
+
+All pages pass the W3C validator (2 points)
+
+CSRF tokens are passed when creating, editing, and deleting comments and stories (5 points)
+
+All AJAX requests that either contain sensitive information or modify something on the server are performed via POST, not GET (3 points)
+
+Page passes the W3C validator (2 points)
+
+## Creative Portion (20 points)
+
+Users have multiple address and they can choose one of them when placing orders. (5 points)
+
+### Restaurant Management
+
+Restaurant Keepers are able to check all orders with different status including pending, confirmed, completed orders, seperately or together. (5 points)
 
 Restaurant Keepers have rights to accept or decline orders placed by users. (5 points)
 
 Restaurant Keepers can add or delete products they provide. (5 points)
-
-## Creative Portion (20 points)
-
-Use Google Map API to set accurate personal address. (5 points)
-
-Use Google Map API to show the location of a specific address (5 points)
-
-Every product has its own picture and could be shown in the web page (5 points)
-
-Users have multiple address and they can choose one of them when placing orders. (5 points)
