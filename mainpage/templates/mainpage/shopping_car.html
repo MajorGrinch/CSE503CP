@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    {% load static %}
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>我的购物车</title>
+    <link href="{% static 'mainpage/css/bootstrap.min.css' %}" rel='stylesheet' type='text/css' />
+    <link rel="stylesheet" href="{% static 'mainpage/css/shopping-car.css' %}">
+    <script src="{% static 'mainpage/js/jquery-3.1.1.min.js' %}"></script>
+    <script src="{% static 'mainpage/js/shoppingcar.js' %}"></script>
+    <script type="text/javascript">
+    $(document).ready(function() {
+
+        initialTable();
+
+    });
+    </script>
+</head>
+
+<body>
+    <div style="text-align: center;margin-top:30px" class="content">
+        <div class="shoppingcar-container">
+        </div>
+    </div>
+</body>
+
+</html>

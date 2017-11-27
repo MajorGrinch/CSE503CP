@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    {% load static %}
+    <title>Home</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'mainpage/css/bootstrap.css' %}" />
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="{% static 'mainpage/js/jquery.min.js' %}"></script>
+    <script src="{% static 'mainpage/js/shoper_detail_get_data.js' %}"></script>
+    <!-- Custom Theme files -->
+    <!--theme-style-->
+    <link href="{% static 'mainpage/css/shop-detail.css' %}" rel="stylesheet" type="text/css" />
+    <!--//theme-style-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="keywords" content="Food shop Responsive web template, Bootstrap Web Templates, Flat Web Templates, Andriod Compatible web template,
+    Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyErricsson, Motorola web design" />
+    <script type="application/x-javascript">
+    addEventListener("load", function() {
+        setTimeout(hideURLbar, 0);
+    }, false);
+
+    function hideURLbar() {
+        window.scrollTo(0, 1);
+    }
+    </script>
+    <!--fonts-->
+    <!-- <link href='http://fonts.useso.com/css?family=Rokkitt:400,700' rel='stylesheet' type='text/css'>
+<link href='http://fonts.useso.com/css?family=Lobster+Two:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+ -->
+    <!--//fonts-->
+    <script type="text/javascript" src="{% static 'mainpage/js/move-top.js' %}"></script>
+    <script type="text/javascript" src="{% static 'mainpage/js/easing.js' %}"></script>
+    <script type="text/javascript">
+    var shopId=parseInt({{shop_id}});
+    jQuery(document).ready(function($) {
+        // var shop_id=request["shop_id"];
+        console.log("shoper_detail get shop id:"+shopId);
+        //在此处获取店铺的信息和全部商品信息
+        getShoperInfo(shopId);
+        getAllFoods(shopId);
+
+        $(".scroll").click(function(event) {
+            event.preventDefault();
+            $('html,body').animate({
+                scrollTop: $(this.hash).offset().top
+            }, 1000);
+        });
+    });
+    </script>
+</head>
+
+<body>
+    <!--header-->
+    <div class="header">
+        <div class="container">
+           <div class="header-top-bar">
+                <ul class="header-grid">
+                    {% if user.username != '' %}
+                    <script type="text/javascript">
+                    $(".header-grid").css("left", "70%");
+                    </script>
+                    <li style="margin-right: 10px">
+                        <div class="dropdown-top">
+                            <a href="#">欢迎您，{{user.username}}</a>
+                            <div class="dropdown-content-top">
+                                <a href="{% url 'mainpage:personal_center' %}" style="font-size: 1.1em">个人中心</a>
+                                <a href="{% url 'login:log_out' %}" style="border-bottom: none;font-size: 1.1em">退出</a>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <a href="{% url 'mainpage:shoppingcar' %}"><img class="shopping-car" src="{% static 'mainpage/css/images/shoppingcar.png' %}"></img></a>
+                    </li>
+                    <li><a href="{% url 'shopmgr:index' %}" style="color: #7a7a7a">卖家中心</a></li>
+                    {% else %}
+                    <script type="text/javascript">
+                    $(".header-grid").css("left", "85%");
+                    </script>
+                    <li><a href="{% url 'login:index' %}">登录</a></li>
+                    <label>|</label>
+                    <li style="margin-right: 10px"><a href="{% url 'login:jmp_to_register' %}">注册</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+            <div class="logo">
+                <h1>
+                    <a href="{% url 'mainpage:index' %}">点餐课设</a>
+                </h1>
+                <a href="{% url 'mainpage:location' %}" style="margin-left:170px;font-size: 1em;color:#000;text-decoration: none;">我的位置：<span class="my-location"></span></a>
+                <div class="search" style="margin-top:-2.5em">
+                    <form>
+                        <input type="text" value="Search store here ..." onFocus="this.value = '';" onBlur="if (this.value == '') {this.value = '';}">
+                        <input type="submit" value="">
+                    </form>
+                </div>
+                <script type="text/javascript">
+                   var locationDescribe=getLocationDescribe();
+                   $(".myLocation").text(locationDescribe);
+                </script>
+            </div>
+            <div class="header-bottom" style="background: #fff;margin-bottom: 1em">
+                <div class="shoper-detail-bar">
+                    <div class="dropdown">
+                        <div class="shop-detail-left ">
+                            <img class="shop-img" src="{% static 'mainpage/css/images/p1.jpg' %}"></img>
+                            <div class="part-detail">
+                                <ul class="part-detail-ul">
+                                    <li class="shop-name"></li>
+                                    <li class="score"></li>
+                                    <li class="illustration"></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="dropdown-content">
+                            <p style="margin-bottom: 10px"><b>商家地址：</b></p>
+                            <p><b>商家联系方式：</b></p>
+                        </div>
+                    </div>
+                    <script type="text/javascript">
+                    var aWidth = parseInt($(".shop-detail-left").css("width")) * 0.5;
+                    $(".dropdown-content").css("width", aWidth);
+                    </script>
+                </div>
+                <div class="shop-detail-right">
+                    <ul class="shop-detail-right-ul">
+                        <li>
+                            <div>
+                                <p><b></b>分</p>
+                                <p>商家评分</p>
+                            </div>
+                        </li>
+                        <h1 class="shop-detail-right-delimiter">|</h1>
+                        <li>
+                            <div>
+                                <p><b>15</b>分钟</p>
+                                <p>平均送餐时间</p>
+                            </div>
+                        </li>
+                        <h1 class="shop-detail-right-delimiter">|</h1>
+                        <li>
+                            <div>
+                                <p><b>15%</b></p>
+                                <p>及时送餐率</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="clearfix"> </div>
+            </div>
+            <!---->
+            <div class="clearfix"> </div>
+        </div>
+    </div>
+    <!---->
+    <div class="content">
+        <div class="container">
+            <div class="content-grid">
+                <div class="food-grid">
+                    <div class="cup">
+                        <div class="col-md-4 cup-in">
+                            <a href="#"><img src="{% static 'mainpage/css/images/p1.jpg' %}" class="img-responsive" alt=""></a>
+                            <p>Lorem ipsum dolor sit consectetur</p>
+                            <span class="dollar">$25.89</span>
+                            <div class="details-in">
+                                <a href="#" class="details" data-food-id="2" data-shop-id="1">+</a>
+                                <p class="month-sales-p">月销售<span class="month-sales-span">10</span>份</p>
+                            </div>
+                            <div class="clearfix"> </div>
+                        </div>
+                        <div class="col-md-4 cup-in">
+                            <a href="#"><img src="{% static 'mainpage/css/images/p2.jpg' %}" class="img-responsive" alt=""></a>
+                            <p>Lorem ipsum dolor sit consectetur</p>
+                            <span class="dollar">$25.89</span>
+                            <div class="details-in">
+                               <a href="#" class="details" data-food-id="2">+</a>
+                                <p>月销售<span class="month-sales">10</span>份</p>
+
+                            </div>
+                            <div class="clearfix"> </div>
+                        </div>
+                        <div class="col-md-4 cup-in">
+                            <a href="#"><img src="{% static 'mainpage/css/images/p3.jpg' %}" class="img-responsive" alt=""></a>
+                            <p>Lorem ipsum dolor sit consectetur</p>
+                            <span class="dollar">$25.89</span>
+                            <div class="details-in">
+                               <a href="#" class="details" data-food-id="2">+</a>
+                                <p>月销售<span class="month-sales">10</span>份</p>
+                            </div>
+                            <div class="clearfix"> </div>
+                        </div>
+                        <div class="col-md-4 cup-in">
+                            <a href="#"><img src="{% static 'mainpage/css/images/p4.jpg' %}" class="img-responsive" alt=""></a>
+                            <p>Lorem ipsum dolor sit consectetur</p>
+                            <span class="dollar">$25.89</span>
+                            <div class="details-in">
+                                <a href="#" class="details" data-food-id="2">+</a>
+                                <p>月销售<span class="month-sales">10</span>份</p>
+                            </div>
+                            <div class="clearfix"> </div>
+                        </div>
+                        <div class="col-md-4 cup-in">
+                            <a href="single.html"><img src="{% static 'mainpage/css/images/p5.jpg' %}" class="img-responsive" alt=""></a>
+                            <p>Lorem ipsum dolor sit consectetur</p>
+                            <span class="dollar">$25.89</span>
+                            <div class="details-in">
+                                <a href="#" class="details" data-food-id="2">+</a>
+                                <p>月销售<span class="month-sales">10</span>份</p>
+                            </div>
+                            <div class="clearfix"> </div>
+                        </div>
+                        <div class="col-md-4 cup-in">
+                            <a href="#"><img src="{% static 'mainpage/css/images/p6.jpg' %}" class="img-responsive" alt=""></a>
+                            <p>Lorem ipsum dolor sit consectetur</p>
+                            <span class="dollar">$25.89</span>
+                            <div class="details-in">
+                                <a href="#" class="details" data-food-id="2">+</a>
+                                <p>月销售<span class="month-sales">10</span>份</p>
+                            </div>
+                            <div class="clearfix"> </div>
+                        </div>
+                        <div class="col-md-4 cup-in">
+                            <a href="#"><img src="{% static 'mainpage/css/images/p4.jpg' %}" class="img-responsive" alt=""></a>
+                            <p>Lorem ipsum dolor sit consectetur</p>
+                            <span class="dollar">$25.89</span>
+                            <div class="details-in">
+                                <a href="#" class="details" data-food-id="2">+</a>
+                                <p>月销售<span class="month-sales">10</span>份</p>
+                            </div>
+                            <div class="clearfix"> </div>
+                        </div>
+                        <div class="col-md-4 cup-in">
+                            <a href="single.html"><img src="{% static 'mainpage/css/images/p5.jpg' %}" class="img-responsive" alt=""></a>
+                            <p>Lorem ipsum dolor sit consectetur</p>
+                            <span class="dollar">$25.89</span>
+                            <div class="details-in">
+                                <a href="#" class="details" data-food-id="2">+</a>
+                                <p>月销售<span class="month-sales">10</span>份</p>
+                            </div>
+                            <div class="clearfix"> </div>
+                        </div>
+                        <div class="col-md-4 cup-in">
+                            <a href="#"><img src="{% static 'mainpage/css/images/p6.jpg' %}" class="img-responsive" alt=""></a>
+                            <p>Lorem ipsum dolor sit consectetur</p>
+                            <span class="dollar">$25.89</span>
+                            <div class="details-in">
+                                <a href="#" class="details" data-food-id="2">+</a>
+                                <p>月销售<span class="month-sales">10</span>份</p>
+                            </div>
+                            <div class="clearfix"> </div>
+                        </div>
+                        <div class="clearfix"> </div>
+                    </div>
+                    <script type="text/javascript">
+                        $(".cup").on("click",".cup-in a:first",function(event){
+                            event.preventDefault();
+                        });
+                        $(".cup").on("click",".details-in a",function(event){
+                            event.preventDefault();
+                            //---在这里将商品加入购物车；
+                            var foodId=parseInt($(this).attr("data-food-id"));
+                            console.log(foodId);
+                            $.post("/mainpage/add_to_shopcar",{csrfmiddlewaretoken:'{{csrf_token}}',food_id:foodId,shop_id:shopId},function(data,status){
+                                if(data==1){
+                                    alert("已加入购物车");
+                                }
+
+                            });
+
+                        });
+
+                    </script>
+                </div>
+                <div class="clearfix"> </div>
+            </div>
+        </div>
+    </div>
+    <!---->
+    <div class="footer">
+        <div class="container">
+            <div class="footer-bottom ">
+                <p class="footer-grid">Copyright &copy; 2015.Company name All rights reserved.More Templates </p>
+            </div>
+            <div class="clearfix"> </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+    $(document).ready(function() {
+        $().UItoTop({
+            easingType: 'easeOutQuart'
+        });
+
+    });
+    </script>
+    <a href="#" id="toTop" style="display: block;"> <span id="toTopHover" style="opacity: 1;"> </span></a>
+</body>
+
+</html>

@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    {% load static %}
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>个人中心|点餐课设</title>
+    <link rel="stylesheet" href="{% static 'mainpage/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'mainpage/css/indexstyle.css' %}">
+    <link rel="stylesheet" href="{% static 'mainpage/css/mystyle.css' %}">
+    <link rel="stylesheet" href="{% static 'mainpage/css/personal_center.css' %}">
+    <link rel="stylesheet" href="{% static 'mainpage/css/order.css' %}">
+
+    <script src="{% static 'mainpage/js/jquery-3.1.1.min.js' %}"></script>
+    <script src="{% static 'mainpage/js/order.js' %}"></script>
+    <script src="{% static 'mainpage/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'mainpage/js/jquery.validate.js' %}"></script>
+    <script src="{% static 'mainpage/js/jquery.validate.extend.js' %}"></script>
+    <script src="{% static 'mainpage/js/add.address.js' %}"></script>
+    <script src="{% static 'mainpage/js/address.showing.form.pager.js' %}"></script>
+
+    <script type="text/javascript">
+    window.onerror = function(sMessage, sUrl, sLine) {
+        alert("发生错误！\n" + sMessage + "\nURL:" + sUrl + "\nLine Number:" + sLine);
+    }
+    </script>
+
+    <script type="text/javascript">
+
+    var isFirstAddress = 0;
+    $(document).ready(function() {
+        base_addr = "{% static 'mainpage/data/' %}";
+        console.log(base_addr);
+        jQuery.addrPrepare(base_addr); //加载add.address.js中的所有脚本
+
+        $(".add-address-label").click(function() {
+            $("#myAddrModal").modal('show');
+        });
+        $("#myAddrModal").on('hidden.bs.modal', function() {
+            $(".selectTip").css("visibility", "hidden");
+            $(".streetTip").css("visibility", "hidden");
+            $(".postcodeTip").css("visibility", "hidden");
+            $(".consigneeTip").css("visibility", "hidden");
+            $(".phoneTip").css("visibility", "hidden");
+            $(".address-form")[0].reset();
+
+        });
+
+        $(".addr_modal_ensure").click(function() {
+            var flag = true;
+            if ($(".province_select").val() == "--省份--") {
+                flag = false;
+                $(".selectTip").css("visibility", "visible").text("请选择省份!");
+            } else if ($(".city_select").val() == "--城市--") {
+                flag = false;
+                $(".selectTip").css("visibility", "visible").text("请选择城市!");
+
+            } else if ($(".xian_select").val() == "--区县--") {
+                flag = false;
+                $(".selectTip").css("visibility", "visible").text("请选择区县!");
+            }
+
+            if ($.trim($(".streetTextArea").val()) == "") {
+                flag = false;
+                $(".streetTip").css("visibility", "visible").text("请填写街道!");
+            }
+
+            if ($.trim($(".postcodeInput").val()) == "") {
+                flag = false;
+                $(".postcodeTip").css("visibility", "visible").text("请填写邮编!");
+            }
+
+            if ($.trim($(".consigneeInput").val()) == "") {
+                flag = false;
+                $(".consigneeTip").css("visibility", "visible").text("请填写收货人姓名!");
+            }
+            if ($.trim($(".phoneInput").val()) == "") {
+                flag = false;
+                $(".phoneTip").css("visibility", "visible").text("请填写手机号!");
+            }
+            if (flag == true) {
+                shengfen = $(".province_select option:selected").text();
+                chengshi = $(".city_select option:selected").text();
+                quxian = $(".xian_select option:selected").text();
+                jiedao = $.trim($(".streetTextArea").val());
+                youbian = $.trim($(".postcodeInput").val());
+                shouhuoren = $.trim($(".consigneeInput").val());
+                shoujihao = $.trim($(".phoneInput").val());
+                $("#myAddrModal").modal("hide");
+                //将完善信息存入数据库中
+                $.post("{% url 'mainpage:add_addr' %}", {
+                    csrfmiddlewaretoken: '{{csrf_token}}',
+                    province: shengfen,
+                    city: chengshi,
+                    county: quxian,
+                    street: jiedao,
+                    consignee: shouhuoren,
+                    consignphone: shoujihao,
+                    postcode: youbian,
+                    moren: isFirstAddress
+                }, function(result, status) {
+                    if (result == 1) { //信息插入成功
+                        alert("信息插入成功");
+                        var addrs_total_num; //地址条数
+                        $.get("{% url 'mainpage:get_address_count' %}", function(data, status) { //获得用户地址信息数
+                            addrs_total_num = data;
+                            console.log("插入后地址数目："+addrs_total_num);
+                            $(".addr-list").empty();
+                            if (data == 0) {
+                                isFirstAddress = 1;
+                                $('<h5>您还没有添加任何地址信息，赶快添加吧！</h5>').appendTo(".addr-list");
+                            } else {
+                                showAddrTable(data);
+                            }
+
+                        });
+
+                    } else {
+                        alert("信息插入失败");
+                    }
+
+                });
+                $("#myAddrModal").show('hide');
+
+
+            }
+
+        });
+
+
+        $(".require-label").prepend('&nbsp;<strong><font color="#FF0000">*</font></strong>&nbsp;');
+        $(".personal-center-content-left ul li a").click(function(event) {
+            event.preventDefault();
+            if ($(this).text() != "三个月订单") {
+                $(".orders-li").removeClass("active");
+
+                if ($(this)[0].name === "account-a") { //选中的是我的账号模块
+
+                    var username = "{{user.username}}"; //将session中的用户名赋给usermane;
+                    $(".row-username").html(username);
+
+                    /*
+                     *从数据库中获得当前登陆用户的手机号，邮箱，此处在正式应用时应做缓存处理，
+                     *避免每次选中模块就要查询数据库
+                     */
+                    $.get("{% url 'mainpage:query_user_info' %}", function(data, status) {
+                        // data = '{"phone":"13162363758","email":"1935734668@qq.com"}'; //测试数据，合并完后删除
+                        var obj = JSON.parse(data);
+                        if ($.isEmptyObject(obj) == 0) { //JSON对象不空
+                            var tel = obj.phone;
+                            var email = obj.email;
+                            var showTel = tel.substr(0, 3) + " * * * * " + tel.substr(7);
+                            $(".row-tel").html(showTel);
+                            $(".row-email").html(email);
+                        }
+
+                    });
+                } else { //选中地址管理模块
+                    var addrs_total_num; //地址条数
+                    $.get("{% url 'mainpage:get_address_count' %}", function(data, status) {
+                        addrs_total_num = data;
+                        if (data == 0) {
+                            $(".addr-list").empty();
+                            isFirstAddress = 1;
+                            $('<h5>您还没有添加任何地址信息，赶快添加吧！</h5>').appendTo(".addr-list");
+                        } else {
+                            $(".addr-list").empty();
+                            showAddrTable(data);
+                        }
+
+                    });
+                }
+
+                $(this).tab('show');
+
+            } else {
+                initialOrdersTables();
+                if ($(".account-li").hasClass("active")) {
+                    $(".account-li").removeClass("active")
+                } else {
+                    $(".addr-li").removeClass("active");
+                }
+                $(this).tab('show');
+            }
+        });
+
+        //初次显示三个月订单tab页
+        $(".orders-li a:first").tab('show');
+        initialOrdersTables();
+
+        //我的账号tab页中修改密码模态框中表单的验证器
+        var changePasswordValidator = $("#regForm").validate({
+            rules: {
+                originPassword: {
+                    required: true,
+                },
+                newPassword: {
+                    required: true,
+                },
+                repassword: {
+                    required: true,
+                    equalTo: "#newPassword"
+                },
+            },
+            messages: {
+                originPassword: {
+                    required: "原密码不能为空",
+                },
+                newPassword: {
+                    required: "新密码不能为空",
+                },
+                repassword: {
+                    required: "确认密码不能为空",
+                    equalTo: "确认新密码和新密码不一致"
+                },
+            }
+        });
+
+        $(".password-change-a").click(function(event) {
+            event.preventDefault();
+            $("#changePasswordModal").modal('show');
+        });
+
+        $(".account-cancle-a").click(function(event) {
+            event.preventDefault();
+        });
+
+        $("#changePasswordModal").on('hidden.bs.modal', function() {
+            $("#regForm")[0].reset(); //重置表单
+            changePasswordValidator.resetForm(); //消除验证的提示信息；
+            $(".origin-password-wrong-label").css("visibility", "hidden");
+        });
+
+        $(".change-password-ensure-btn").click(function() {
+            $(".origin-password-wrong-label").css("visibility", "hidden");
+
+            if ($("#regForm").valid()) { //表单验证通过
+                var originPassword = $("#originPassword").val();
+                console.log("check origin password");
+                //user参数后填登陆的用户的用户名，此处判断原密码是否正确，若正确返回1
+                $.post("{% url 'mainpage:check_origin_pwd' %}", {
+                    csrfmiddlewaretoken: '{{csrf_token}}',
+                    originPass: originPassword
+                }, function(result, status) {
+                    if (result == 1) { //原密码正确
+                        var newPassword = $("#newPassword").val();
+                        //user参数后填登陆的用户的用户名,此处修改数据库中用户的密码，若修改成功返回1
+                        $.post("{% url 'mainpage:change_password' %}", {
+                            csrfmiddlewaretoken: '{{csrf_token}}',
+                            newPass: newPassword
+                        }, function(result, status) {
+                            if (result == 1) { //新密码插入数据库成功
+                                $("#changePasswordModal").modal('hide');
+                                alert("修改密码成功");
+                                location.href = "{% url 'login:index' %}"
+                            }
+                        });
+                    } else { //原密码错误
+                        $(".origin-password-wrong-label").css("visibility", "visible");
+                    }
+                });
+            }
+
+        });
+
+
+    });
+    </script>
+</head>
+
+<body>
+    <!-- 地址管理中增加新地址的模态框（Modal） -->
+    <div class="modal fade" id="myAddrModal" tabindex="-1" role="dialog" aria-labelledby="myAddrModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myAddrModalLabel">填写地址</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="add_addr_div">
+                        <form class="form-horizontal address-form" role="form">
+                            <div class="form-group">
+                                <label class="col-xs-2  control-label require-label">所在地区</label>
+                                <div class "col-xs-10">
+                                    <div class="form-group">
+                                        <div class="col-xs-4 select-div">
+                                            <select class="province_select" id="province_select_id" name="province">
+                                                <option>--省份--</option>
+                                                <option value="beijing">北京市</option>
+                                                <option value="fujian">福建省</option>
+                                            </select>
+                                            <select class="city_select" name="city">
+                                                <option>--城市--</option>
+                                            </select>
+                                            <select class="xian_select" name="xian">
+                                                <option>--区县--</option>
+                                            </select>
+                                        </div>
+                                        <label class="col-xs-6 control-label selectTip errorTip" for="province_select_id">XXXX</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-xs-2 control-label require-label">街道地址</label>
+                                <div class="col-xs-10">
+                                    <div class="form-group">
+                                        <div class="col-xs-5">
+                                            <textarea class="form-control streetTextArea"></textarea>
+                                        </div>
+                                        <label class="col-xs-5 control-label streetTip errorTip">请填写街道地址!</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-xs-2 control-label require-label">邮政编码</label>
+                                <div class="col-xs-10">
+                                    <div class="form-group">
+                                        <div class="col-xs-5">
+                                            <input class="form-control postcodeInput"></input>
+                                        </div>
+                                        <label class="col-xs-5 control-label postcodeTip errorTip">请填写邮政编码!</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-xs-2 control-label require-label">收货人姓名</label>
+                                <div class="col-xs-10">
+                                    <div class="form-group">
+                                        <div class="col-xs-5">
+                                            <input class="form-control consigneeInput"></input>
+                                        </div>
+                                        <label class="col-xs-5 control-label consigneeTip errorTip">请填写收货人姓名!</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-xs-2 control-label require-label">电话号码</label>
+                                <div class="col-xs-10">
+                                    <div class="form-group">
+                                        <div class="col-xs-5">
+                                            <input class="form-control phoneInput"></input>
+                                        </div>
+                                        <label class="col-xs-5 control-label phoneTip errorTip">请填写手机号!</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-xs-2 control-label"></label>
+                                <div class="col-xs-10">
+                                    <div class="form-group">
+                                        <div class="col-xs-8">
+                                            <button type="button" class="btn btn-success addr_modal_ensure">
+                                                确定
+                                            </button>
+                                            <a class="addr-cancle-a" href="#" data-dismiss="modal">取消</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal -->
+    </div>
+    <!-- 修改密码的模态框 -->
+    <div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="changePasswordModalLabel">设置密码</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" id="regForm" role="form">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label require-label">原密码：</label>
+                            <input type="password" id="originPassword" name="originPassword" class="item-text" placeholder="原密码" autocomplete="off"></input>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label require-label">新密码：</label>
+                            <input type="password" id="newPassword" name="newPassword" class="item-text" placeholder="新密码"></input>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label require-label">确认新密码：</label>
+                            <input type="password" name="repassword" class="item-text" placeholder="确认新密码"></input>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label"></label>
+                            <div class="form-group col-sm-9">
+                                <div style="margin-left:20px">
+                                    <button type="button" class="btn btn-success change-password-ensure-btn">
+                                        确定
+                                    </button>
+                                    <a class="account-cancle-a" href="#" data-dismiss="modal">取消</a>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <label class="origin-password-wrong-label" style="visibility:hidden;color:red;float:left">原密码错误！</label>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal -->
+    </div>
+    <!-- header -->
+    <header>
+        <div class="header-top-bar">
+            <ul class="header-grid">
+                <script type="text/javascript">
+                $(".header-grid").css("left", "70%");
+                </script>
+                <li style="margin-right: 10px">
+                    <div class="dropdown-top">
+                        <a href="#">欢迎您，{{user.username}}</a>
+                        <div class="dropdown-content-top">
+                            <a href="{% url 'mainpage:personal_center' %}" style="font-size: 1.1em">个人中心</a>
+                            <a href="{% url 'login:log_out' %}" style="border-bottom: none;font-size: 1.1em">退出</a>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <a href="{% url 'mainpage:shoppingcar' %}"><img class="shopping-car" src="{% static 'mainpage/css/images/shoppingcar.png' %}"></img>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="logo">
+            <h1>
+                    <a href="{% url 'mainpage:index' %}">点餐课设</a>
+            </h1>
+        </div>
+    </header>
+    <!-- /header -->
+
+    <!-- body-content -->
+    <div class="personal-center-content">
+        <div class="personal-center-content-left">
+            <h4>订单查询</h4>
+            <ul class="nav nav-pills">
+                <li class="orders-li"><a href="#three-moths-orders" name="orders-a">三个月订单</a></li>
+            </ul>
+            <h4 style="margin-top:20px">账号管理</h4>
+            <ul class="nav nav-pills">
+                <li class="account-li"><a href="#my-account" name="account-a">我的账号</a></li>
+                <li class="addr-li"><a href="#addr-management" name="addr-management-a">地址管理</a></li>
+            </ul>
+        </div>
+        <!-- tab-pane的内容 -->
+        <div class="personal-center-content-right tab-content">
+            <div class="tab-pane fade in orders-div in" id="three-moths-orders">
+                <div class="orders-list" id="orders-list">
+                    <script type="text/javascript">
+
+                        $("#order").each(function(){
+                            if($(this).find(".has-gotten-goods").length==1){//如果订单处于已收货状态，需要显示出评价td栏
+                                $(this).find(".go-comment").css("visibility","visible");
+                            }else{
+                                $(this).find(".go-comment").css("visibility","hidden");
+                            }
+
+                            $(this).find(".need-confirm").click(function(){
+                                //var orderId=$(this)
+                            });
+                        });
+                    </script>
+                </div>
+            </div>
+            <div class="tab-pane fade account-div" id="my-account">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            用户名：
+                        </div>
+                        <div class="col-xs-6 row-username" style="margin-left: -35px">
+                        </div>
+                        <div class="col-xs-3">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-3">
+                            手机号：
+                        </div>
+                        <div class="col-xs-6 row-tel" style="margin-left: -35px">
+                        </div>
+                        <div class="col-xs-3">
+                            <a class="account-a" href="#">修改</a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-3">
+                            邮&nbsp;&nbsp;&nbsp;&nbsp;箱：
+                        </div>
+                        <div class="col-xs-6 row-email" style="margin-left: -35px">
+                            764424892@qq.com
+                        </div>
+                        <div class="col-xs-3">
+                            <a class="account-a" href="#">修改</a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-3">
+                            密&nbsp;&nbsp;&nbsp;&nbsp;码：
+                        </div>
+                        <div class="col-xs-6 row-password" style="margin-left: -35px">
+                            .&nbsp;&nbsp;&nbsp;.&nbsp;&nbsp;&nbsp;.&nbsp;&nbsp;&nbsp;.&nbsp;&nbsp;&nbsp;.&nbsp;&nbsp;&nbsp;.
+                        </div>
+                        <div class="col-xs-3">
+                            <a class="account-a password-change-a" href="#">修改</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade addr-management-div" id="addr-management">
+                <div class="addr-list" id="addr-list"></div>
+                <label class="add-address-label" style="margin-top:30px">+添加地址</label>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+
+{#    <footer class="myfooter">#}
+{#        <div class="container">#}
+{#            <div class="footer-bottom ">#}
+{#                <p class="footer-grid">Copyright &copy; 2015.Company name All rights reserved.More Templates </p>#}
+{#            </div>#}
+{#            <div class="clearfix"> </div>#}
+{#        </div>#}
+{#    </footer>#}
+</body>
+
+</html>

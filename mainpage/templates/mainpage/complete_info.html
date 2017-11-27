@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    {% load static %}
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>完善信息 | 点餐课设</title>
+    <!-- Bootstrap -->
+    <link href="{% static 'mainpage/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'mainpage/css/mystyle.css' %}" rel="stylesheet">
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="{% static 'mainpage/js/jquery-3.1.1.min.js' %}"></script>
+    <script src="{% static 'mainpage/js/bootstrap.min.js' %}"></script>
+</head>
+<style>
+.complete_info_content div h4 {
+    margin-left: -30px;
+    margin-top: -30px;
+    margin-bottom: 30px;
+}
+
+.address-block {
+    margin-left: 50px;
+}
+
+.add-address-label {
+    color: #0000ff;
+}
+
+label.add-address-label:hover {
+    text-decoration: underline;
+    color: #0000bb;
+}
+
+.modal-header {
+    background-color: #f8f8f8;
+}
+
+.add_addr_div {
+    margin-left: 5%;
+    margin-top: 5%;
+}
+
+.select-div {
+    padding-top: 0.5%;
+}
+
+.selectTip {
+    padding-left: 0;
+    margin-left: 0;
+}
+
+.modal-dialog {
+    min-width: 800px;
+    font-size:0.8em;
+}
+
+.customer-form {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.customer-form td,
+th {
+    font-size: 1em;
+    border: 1px solid #98bf21;
+    padding: 3px 7px 2px 7px;
+}
+
+.customer-form th {
+    font-size: 1.1em;
+    text-align: left;
+    padding-top: 5px;
+    padding-bottom: 4px;
+    background-color: #A7C942;
+    color: #ffffff;
+}
+
+.customer-form tr.alt td {
+    color: #000000;
+    background-color: #EAF2D3;
+}
+</style>
+<script type="text/javascript">
+var shengfen;
+var chengshi;
+var quxian;
+var jiedao;
+var youbian;
+var shouhuoren;
+var shoujihao;
+//var postcode;
+$(document).ready(function() {
+    //alert("文档加载");
+    $(".require-label").prepend('&nbsp;<strong><font color="#FF0000">*</font></strong>&nbsp;');
+    // $(".errorTip").css("visibility","visible");
+
+    $(".add-address-label").click(function() {
+        //alert("clicked");
+        $("#myAddrModal").modal('show');
+
+    });
+
+    $(".province_select").blur(function() {
+        if ($(this).get(0).selectedIndex == 0) {
+
+            $(".selectTip").css("visibility", "visible").text("请选择省份!");
+        }
+    });
+
+    $(".city_select").blur(function() {
+        if ($(".province_select").get(0).selectedIndex != 0 && $(this).get(0).selectedIndex == 0) {
+            $(".selectTip").css("visibility", "visible").text("请选择城市!");
+        }
+
+
+    });
+
+    $(".xian_select").blur(function() {
+        //alert($(".province_select").get(0).selectedIndex);
+        if ($(".province_select").get(0).selectedIndex != 0 && $(".city_select").get(0).selectedIndex != 0 && $(this).get(0).selectedIndex == 0) {
+            //alert("test");
+            $(".selectTip").css("visibility", "visible").text("请选择区县!");
+        } else if ($(".province_select").get(0).selectedIndex == 0) {
+            $(".selectTip").css("visibility", "visible").text("请选择省份!");
+        } else if ($(".province_select").get(0).selectedIndex != 0 && $(".city_select").get(0).selectedIndex == 0) {
+            $(".selectTip").css("visibility", "visible").text("请选择城市!");
+        }
+
+    });
+
+    $(".province_select").focus(function() {
+        if ($("selectTip").val() == "请选择省份!") {
+            $(".selectTip").css("visibility", "hidden");
+        }
+    });
+
+
+    $(".city_select").focus(function() {
+        if ($("selectTip").val() == "请选择城市!") {
+            $(".selectTip").css("visibility", "hidden");
+
+        }
+
+
+    });
+
+    $(".xian_select").focus(function() {
+        if ($("selectTip").val() == "请选择区县!") {
+            $(".selectTip").css("visibility", "hidden");
+        }
+    });
+
+    $(".streetTextArea").blur(function() {
+        if ($.trim($(this).val()) == "") {
+            $(".streetTip").css("visibility", "visible");
+        }
+    });
+
+    $(".postcodeInput").blur(function() {
+        if ($.trim($(this).val()) == "") {
+            $(".postcodeTip").css("visibility", "visible");
+        }
+    });
+
+    $(".consigneeInput").blur(function() {
+        if ($.trim($(this).val()) == "") {
+            $(".consigneeTip").css("visibility", "visible");
+        }
+    });
+
+    $(".phoneInput").blur(function() {
+        if ($.trim($(this).val()) == "") {
+            $(".phoneTip").css("visibility", "visible");
+        }
+    });
+
+
+    $(".streetTextArea").focus(function() {
+        $(".streetTip").css("visibility", "hidden");
+    });
+
+    $(".postcodeInput").focus(function() {
+        $(".postcodeTip").css("visibility", "hidden");
+    });
+
+    $(".consigneeInput").focus(function() {
+        $(".consigneeTip").css("visibility", "hidden");
+    });
+
+    $(".phoneInput").focus(function() {
+        $(".phoneTip").css("visibility", "hidden");
+    });
+
+
+
+    $(".province_select").change(function() {
+        var fname = $(this).val();
+        console.log(fname);
+        $(".city_select").empty();
+        $(".xian_select").empty();
+        $('<option></option>').html("--城市--").appendTo(".city_select");
+        $('<option></option>').html("--区县--").appendTo(".xian_select");
+
+        $(".selectTip").css("visibility", "hidden");
+        fname = "{% static 'mainpage/data/' %}" + fname + "_city.xml";
+        console.log(fname);
+        $.ajax({
+            url: fname,
+            success: function(result) {
+                console.log("success")
+                $(result).find("city").each(function() {
+                    var cityname = $(this).find("cityname").text();
+                    var citypinyin = $(this).find("citypinyin").text();
+                    $('<option></option>').html(cityname).attr("value", citypinyin).appendTo(".city_select");
+                });
+            }
+        });
+
+    });
+
+    $(".city_select").change(function() {
+        var fname = $(this).val();
+
+        $(".xian_select").empty();
+        $('<option></option>').html("--区县--").appendTo(".xian_select");
+
+        $(".selectTip").css("visibility", "hidden");
+        fname = "{% static 'mainpage/data/' %}" + fname + "_xian.xml";
+        $.ajax({
+            url: fname,
+            success: function(result) {
+                $(result).find("xian").each(function() {
+                    var xianname = $(this).text();
+                    $('<option></option>').html(xianname).appendTo(".xian_select");
+                });
+            }
+        });
+
+
+    });
+
+    $(".xian_select").change(function() {
+        var xianname = $(this).val();
+        if (xianname != "--城市--") {
+            $(".selectTip").css("visibility", "hidden");
+        }
+    });
+
+    $(".addr-cancle-a").click(function(event) {
+        event.preventDefault();
+    });
+
+    $("#phoneFocusedInput").focus(function() {
+        $(".completePhoneTip").css("visibility", "hidden");
+    });
+
+    $("#phoneFocusedInput").blur(function() {
+        if ($.trim($(this).val()) == "") {
+            $(".completePhoneTip").css("visibility", "visible");
+        }
+    });
+
+    $("#emailFocusedInput").focus(function() {
+        $(".emailTip").css("visibility", "hidden");
+
+    });
+
+    $("#emailFocusedInput").blur(function() {
+        if ($.trim($(this).val()) == "") {
+            $(".emailTip").css("visibility", "visible");
+        }
+    });
+
+    $("#myAddrModal").on('hidden.bs.modal', function() {
+        $(".selectTip").css("visibility", "hidden");
+        $(".streetTip").css("visibility", "hidden");
+        $(".postcodeTip").css("visibility", "hidden");
+        $(".consigneeTip").css("visibility", "hidden");
+        $(".phoneTip").css("visibility", "hidden");
+        $(".province_select").get(0).selectedIndex = 0;
+        $(".city_select").get(0).selectedIndex = 0;
+        $(".xian_select").get(0).selectedIndex = 0;
+        $(".streetTextArea").val("");
+        $(".postcodeInput").val("");
+        $(".consigneeInput").val("");
+        $(".phoneInput").val("");
+    });
+
+    $(".addr_modal_ensure").click(function() {
+        var flag = true;
+        if ($(".province_select").val() == "--省份--") {
+            flag = false;
+            $(".selectTip").css("visibility", "visible").text("请选择省份!");
+        } else if ($(".city_select").val() == "--城市--") {
+            flag = false;
+            $(".selectTip").css("visibility", "visible").text("请选择城市!");
+
+        } else if ($(".xian_select").val() == "--区县--") {
+            flag = false;
+            $(".selectTip").css("visibility", "visible").text("请选择区县!");
+        }
+
+        if ($.trim($(".streetTextArea").val()) == "") {
+            flag = false;
+            $(".streetTip").css("visibility", "visible").text("请填写街道!");
+        }
+
+        if ($.trim($(".postcodeInput").val()) == "") {
+            flag = false;
+            $(".postcodeTip").css("visibility", "visible").text("请填写邮编!");
+        }
+
+        if ($.trim($(".consigneeInput").val()) == "") {
+            flag = false;
+            $(".consigneeTip").css("visibility", "visible").text("请填写收货人姓名!");
+        }
+        if ($.trim($(".phoneInput").val()) == "") {
+            flag = false;
+            $(".phoneTip").css("visibility", "visible").text("请填写手机号!");
+        }
+        if (flag == true) {
+            shengfen = $(".province_select option:selected").text();
+            chengshi = $(".city_select option:selected").text();
+            quxian = $(".xian_select option:selected").text();
+            jiedao = $.trim($(".streetTextArea").val());
+            youbian = $.trim($(".postcodeInput").val());
+            shouhuoren = $.trim($(".consigneeInput").val());
+            shoujihao = $.trim($(".phoneInput").val());
+            //postcode=$.trim($(".postcodeInput").val());
+            //alert(shengfen+" "+chengshi+" "+quxian+" "+jiedao+" "+youbian+" "+shouhuoren+" "+shoujihao);
+            $("#myAddrModal").modal("hide");
+            //将地址信息更新到完善信息页面中的div addr-list中
+            $('<form></form>').appendTo(".addr-list");
+            $(".addr-list form").addClass("customer-form");
+            $('<tr><th>收货人</th><th>收货地址</th><th>手机号</th></tr>').appendTo(".customer-form");
+            $('<tr><td>' + shouhuoren + '</td><td>' + shengfen + chengshi + quxian + jiedao + ' ' + youbian + '</td><td>' + shoujihao + '</td></tr>').appendTo(".customer-form");
+            //将激发模态框的label隐藏起来，只允许添加一个地址，设为默认地址；
+            $(".add-address-label").css("visibility", "hidden");
+
+        }
+    });
+
+    $(".complete_save").click(function() {
+        var completePhone = $.trim($("#phoneFocusedInput").val());
+        var completeEmail = $.trim($("#emailFocusedInput").val());
+        var flag = true;
+        //alert(completeEmail);
+        if (completePhone == "") {
+            $(".completePhoneTip").css("visibility", "visible");
+            flag = false;
+        }
+        if (completeEmail == "") {
+            $(".emailTip").css("visibility", "visible");
+            flag = false;
+        }
+        console.log("Save");
+        if (flag == true) {
+            if (shengfen == undefined) {
+                shengfen = ''
+            }
+            if (chengshi == undefined) {
+                chengshi = ''
+            }
+            if (quxian == undefined) {
+                quxian = ''
+            }
+            if (jiedao == undefined) {
+                jiedao = ''
+            }
+            if (shouhuoren == undefined) {
+                shouhuoren = ''
+            }
+            if (shoujihao == undefined) {
+                shoujihao = ''
+            }
+            //将完善信息存入数据库中,且为默认地址
+            $.post("{% url 'mainpage:complete' %}", {
+                csrfmiddlewaretoken: '{{csrf_token}}',
+                phone: completePhone,
+                email: completeEmail,
+                province: shengfen,
+                city: chengshi,
+                county: quxian,
+                street: jiedao,
+                consignee: shouhuoren,
+                consignphone: shoujihao,
+                postcode: youbian,
+                moren: true
+            }, function(result, status) {
+                if (result == 1) { //信息插入成功
+                    alert("信息插入成功");
+                    //转入主页；
+                    location.href = "{% url 'mainpage:index' %}";
+
+
+                } else {
+                    alert("信息插入失败");
+                }
+
+            });
+        }
+
+    });
+
+
+});
+</script>
+
+<body>
+    <!-- 模态框（Modal） -->
+    <div class="modal fade" id="myAddrModal" tabindex="-1" role="dialog" aria-labelledby="myAddrModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myAddrModalLabel">填写地址</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="add_addr_div">
+                        <form class="form-horizontal" role="form">
+                            <div class="form-group">
+                                <label class="col-sm-2  control-label require-label">所在地区</label>
+                                <div class "col-sm-10">
+                                    <div class="form-group">
+                                        <div class="col-sm-4 select-div">
+                                            <select class="province_select" id="province_select_id" name="province">
+                                                <option>--省份--</option>
+                                                <option value="beijing">Beijing</option>
+                                                <option value="fujian">Fujian</option>
+                                            </select>
+                                            <select class="city_select" name="city">
+                                                <option>--城市--</option>
+                                            </select>
+                                            <select class="xian_select" name="xian">
+                                                <option>--区县--</option>
+                                            </select>
+                                        </div>
+                                        <label class="col-sm-6 control-label selectTip errorTip" for="province_select_id">XXXX</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label require-label">街道地址</label>
+                                <div class="col-sm-10">
+                                    <div class="form-group">
+                                        <div class="col-sm-5">
+                                            <textarea class="form-control streetTextArea"></textarea>
+                                        </div>
+                                        <label class="col-sm-5 control-label streetTip errorTip">请填写街道地址!</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label require-label">邮政编码</label>
+                                <div class="col-sm-10">
+                                    <div class="form-group">
+                                        <div class="col-sm-5">
+                                            <input class="form-control postcodeInput"></input>
+                                        </div>
+                                        <label class="col-sm-5 control-label postcodeTip errorTip">请填写邮政编码!</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label require-label">收货人姓名</label>
+                                <div class="col-sm-10">
+                                    <div class="form-group">
+                                        <div class="col-sm-5">
+                                            <input class="form-control consigneeInput"></input>
+                                        </div>
+                                        <label class="col-sm-5 control-label consigneeTip errorTip">请填写收货人姓名!</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label require-label">电话号码</label>
+                                <div class="col-sm-10">
+                                    <div class="form-group">
+                                        <div class="col-sm-5">
+                                            <input class="form-control phoneInput"></input>
+                                        </div>
+                                        <label class="col-sm-5 control-label phoneTip errorTip">请填写手机号!</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"></label>
+                                <div class="col-sm-10">
+                                    <div class="form-group">
+                                        <div class="col-sm-8">
+                                            <button type="button" class="btn btn-success addr_modal_ensure">
+                                                确定
+                                            </button>
+                                            <a class="addr-cancle-a" href="#" data-dismiss="modal">取消</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!--  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                    </button>
+                    <button type="button" class="btn btn-primary">
+                        提交更改
+                    </button>
+                </div> -->
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal -->
+    </div>
+    <!-- header -->
+    <div class="header">
+        <div class="container">
+            <div class="logo">
+                <a href="../index.html">点餐 <span>课设</span></a>
+            </div>
+        </div>
+    </div>
+    <div class="complete_info_content">
+        <div>
+            <h4>完善个人信息</h4>
+        </div>
+        <form class="form-horizontal" role="form">
+            <div class="form-group">
+                <label class="col-sm-2 control-label require-label">手机号</label>
+                <div class="col-sm-10">
+                    <div class="form-group">
+                        <div class="col-sm-5">
+                            <input class="form-control" id="phoneFocusedInput">
+                        </div>
+                        <label class="col-sm-5 control-label completePhoneTip errorTip">请填写手机号!</label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label require-label">邮箱</label>
+                <div class="col-sm-10">
+                    <div class="form-group">
+                        <div class="col-sm-5">
+                            <input class="form-control" id="emailFocusedInput">
+                        </div>
+                        <label class="col-sm-5 control-label emailTip errorTip">请填写邮箱!</label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">地址</label>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label"></label>
+                <div class="addr-list"></div>
+            </div>
+            <div class="address-block form-group">
+                <label class="col-sm-3 control-label add-address-label">+添加地址</label>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label"></label>
+                <button type="button" class="btn btn-success complete_save">
+                    保存
+                </button>
+            </div>
+        </form>
+    </div>
+    <!--footer-->
+    <div class="myfooter">
+        <div class="container">
+            <div class="copy">
+                <p>Copyright &copy; 2015.Company name All rights reserved.</p>
+            </div>
+            <div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

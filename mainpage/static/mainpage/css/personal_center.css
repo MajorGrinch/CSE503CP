@@ -1,0 +1,202 @@
+body {
+    background: url("images/back.jpg") repeat-y center;
+}
+
+.logo h1 {
+    font-size: 1.0em;
+    font-family: 'Lobster Two', cursive;
+    text-align: left;
+}
+
+.logo h1 a {
+    text-decoration: none;
+    color: #000000;
+}
+
+.logo {
+    padding-top: 2em;
+    margin-bottom: 1em;
+}
+
+.header {
+    border-bottom: none;
+    height: auto;
+    background-color: #ffd607;
+    width: 100%;
+}
+
+.personal-center-content {
+    margin-top: 1em;
+    margin-bottom: 1em;
+    margin-left: 1em;
+    margin-right: 1em;
+    height: 500px;
+    min-width: 1100px;
+    overflow-y: auto;
+    overflow-x: auto;
+    border: 1px solid #DCDCDC;
+    background-color: #ffffff;
+    /* background-color: #f00;*/
+}
+
+.personal-center-content-left {
+    float: left;
+    width: 150px;
+    height: 500px;
+    /*  background-color: #fafafa;
+        background-color: #0f0;*/
+    background: url("images/back.png") repeat-x center;
+    padding-left: 15px;
+    padding-top: 15px;
+    border-right: 1px solid #DCDCDC;
+}
+
+
+/* border-right: 1px solid #DCDCDC;*/
+
+.personal-center-content-left ul {
+    list-style-type: none;
+    padding-left: 15px;
+}
+
+.personal-center-content-left ul li {
+    margin-top: 5px;
+    color: #a0a0a0
+}
+
+.personal-center-content-right {
+    background-color: #ffffff;
+    /*background-color: #00f;*/
+    height: 500px;
+    overflow-y: auto;
+    overflow-x: auto;
+}
+
+.account-div {
+    padding-left: 35px;
+    padding-top: 100px
+}
+
+.addr-management-div {
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 50px;
+}
+
+.container {
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+    width: 100%;
+    height: auto;
+}
+
+.row {
+    width: 60%;
+    margin-top: 12px;
+}
+
+label.add-address-label {
+    color: #0000ff;
+}
+
+label.add-address-label:hover {
+    text-decoration: underline;
+    color: #0000bb;
+}
+
+div.header1,
+div.footer1 {
+    padding: 0;
+    clear: left;
+}
+
+.account-a {
+    color: #2bb8aa;
+}
+
+#changePasswordModal .modal-dialog {
+    min-width: 650px;
+}
+
+.customer-form {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.customer-form td,
+th {
+    font-size: 1em;
+    border: 1px solid #98bf21;
+    padding: 3px 7px 2px 7px;
+}
+
+.customer-form th {
+    font-size: 1.1em;
+    text-align: left;
+    padding-top: 5px;
+    padding-bottom: 4px;
+    background-color: #A7C942;
+    color: #ffffff;
+}
+
+.customer-form tr.alt td {
+    color: #000000;
+    background-color: #EAF2D3;
+}
+
+.address-form-pagination {
+    float: right;
+}
+
+.default_label {
+    color: #09c513;
+}
+
+.modal-header {
+    background-color: #f8f8f8;
+}
+
+.add_addr_div {
+    margin-left: 1em;
+    margin-top: 5%;
+}
+
+.select-div {
+    padding-top: 0.5%;
+}
+
+.selectTip {
+    padding-left: 0;
+    margin-left: 0;
+}
+
+#myAddrModal .modal-dialog {
+    font-size: 0.8em;
+    min-width: 800px;
+}
+
+.myfooter {
+    background: url("images/footer.png") no-repeat center;
+    width: 100%;
+    height: 50px;
+    display: block;
+    background-size: cover;
+}
+
+.myfooter h4 {
+    font-size: 1em;
+    font-family: 'Lobster Two', cursive;
+    color: #fff;
+}
+
+.myfooter-bottom p {
+    font-size: 1.4em;
+    color: #440f0a;
+    line-height: 1.5em;
+    width: 80%;
+    padding: 0.5em 0;
+}

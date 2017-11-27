@@ -1,0 +1,153 @@
+    @font-face {
+        font-family: 'PoiretOne-Regular';
+        src: url("fonts/PoiretOneRegular.ttf") format('truetype');
+    }
+
+    @font-face {
+        font-family: 'OpenSans-Regular';
+        src: url("fonts/OpenSansRegular.ttf") format('truetype');
+    }
+
+
+    body {
+        font-family: 'Lato', sans-serif;
+        font-size: 1.5em;
+        background: url("images/back.png") repeat center;
+    }
+
+    .header {
+        border-bottom: 3px ridge #FFA500;
+        padding: 1em 0;
+        width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .logo {
+        float: left;
+        margin-left: 13%;
+    }
+
+    .logo a {
+        font-size: 200%;
+        display: block;
+        text-decoration: none;
+        font-family: 'PoiretOne-Regular';
+        color: #DA6A3C;
+        font-weight: 100;
+    }
+
+    .logo span {
+        color: #222;
+    }
+
+    .user-logo {
+        float: right;
+        margin-right: 10%;
+    }
+
+    .user-logo a {
+        text-decoration: none;
+        color: #000000;
+        text-align: left;
+        padding-left: 25px;
+        background: url('images/user.png') no-repeat left center;
+    }
+
+    .myfooter {
+        position: fixed;
+        margin-right: 0;
+        margin-left: 0;
+        bottom:0px;
+        width: 100%;
+    }
+
+    .copy {
+        border-top: 1px ridge rgba(11, 12, 16, 0.16);
+        padding-top: 1em;
+        padding-bottom: 0.5em;
+        padding-left: 0;
+        padding-right: 0;
+        text-align: center;
+        width: 100%;
+    }
+
+    .copy p {
+        color: #777;
+        font-size: 0.9em;
+        padding-left: 0;
+        padding-right: 0;
+        width: 100%;
+    }
+
+    .register_content {
+        padding-left: 15%;
+        padding-top: 5%;
+    }
+
+    .complete_info_content {
+        padding-left: 15%;
+        padding-top: 5%;
+    }
+
+    .errorTip {
+        color: #ff0000;
+        width: auto;
+        padding-left: 0px;
+        visibility: hidden;
+    }
+
+    /* button.ensure {
+        width: 200px;
+    } */
+
+    button.addr_modal_ensure {
+        width: 60px;
+    }
+
+    button.complete_save {
+        width: 200px;
+        margin-left: 15px;
+    }
+    /*表单校验相关的css*/
+
+    .item-text {
+        float: left;
+        width: 244px;
+        /*height: 16px;*/
+        padding: 9px 25px 9px 5px;
+        margin-left: 10px;
+        border: 1px solid #ccc;
+        overflow: hidden;
+    }
+
+    input.error {
+        border: 1px solid #E6594E;
+    }
+
+    input.highlight {
+        border: 1px solid #7abd54;
+    }
+
+    label.error,
+    label.tip {
+        float: left;
+        height: 32px;
+        line-height: 32px;
+        font-size: 14px;
+        text-align: left;
+        margin-left: 5px;
+        padding-left: 25px;
+        color: red;
+        background: url('images/error.png') no-repeat left center;
+    }
+
+    label.tip {
+        color: #aaa;
+        background: url('images/tip.png') no-repeat left center;
+    }
+
+    label.valid {
+        background: url('images/valid.png') no-repeat left center;
+        width: 32px;
+    }
