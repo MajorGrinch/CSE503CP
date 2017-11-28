@@ -141,10 +141,10 @@
         <div class="header-bottom">
             <div class="top-nav">
                 <ul>
-                    <li class="active"><a href="#">销量</a>
+                    <li class="active"><a href="#">Sales</a>
                         <label>| </label>
                     </li>
-                    <li><a href="#">评价</a>
+                    <li><a href="#">Rating</a>
                         <label>|</label>
                     </li>
   <!--                   <li>
@@ -161,18 +161,15 @@
                 </ul>
             </div>
             <script type="text/javascript">
-                getShopInfoBySalesOrComments("销量", 1);
+                getShopInfoBySalesOrComments("sales", 1);
                 cur_page = 1;
                 $(".top-nav ul li").click(function () {
                     if ($(this).hasClass("active") == false) {
                         $(".top-nav ul li.active").removeClass("active");
                         $(this).addClass("active");
                         console.log("选中：" + $(this).find("a").html());
-                        if ($(this).find("a").html() == "起送价筛选") {
-                            getShopInfoByPrice($(".price_select").val(), 1);
-
-                        } else {
-                            $(".price_select").get(0).selectedIndex = 0;
+                        if ($(this).find("a").html() == "Rating") {
+                            // $(".price_select").get(0).selectedIndex = 0;
                             getShopInfoBySalesOrComments($(this).find("a").html(), 1);
                         }
                         cur_page = 1;
