@@ -197,14 +197,23 @@ def json_serialize(obj):
 
 def show_shops_orderby_sales(request):
     all_orders = Orders.objects.values('shop_id_id').annotate(Count('shop_id_id'))
-    all_shop_set = Shop.objects.order_by('id').values()
-    all_shop = list(all_shop_set)
-    for shop in all_orders:
-        shop_id = shop['shop_id_id']
-        all_shop[shop_id - 1]['sales_num'] = shop['shop_id_id__count']
+    print(list(all_orders))
+    all_shop_list = list(Shop.objects.order_by('id').values())
+    all_shop_dict = {}
+    all_shop = []
+    for shop in all_shop_list:
+        all_shop_dict[shop['id']] = shop
+    print(all_shop_dict)
+    for order in all_orders:
+        shop_id = order['shop_id_id']
+        all_shop_dict[shop_id]['sales_num'] = order['shop_id_id__count']
     # print(all_shop)
+    for k in list(all_shop_dict):
+        all_shop.append(all_shop_dict[k])
+    print(all_shop)
     response_data = {}
     response_data['shopArray'] = all_shop
+    print(response_data)
     return HttpResponse(json.dumps(response_data, default=decimal_default))
 
 
