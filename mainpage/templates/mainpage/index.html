@@ -25,11 +25,7 @@
             window.scrollTo(0, 1);
         }
     </script>
-    <!--fonts-->
-    <!-- <link href='http://fonts.useso.com/css?family=Rokkitt:400,700' rel='stylesheet' type='text/css'>
-<link href='http://fonts.useso.com/css?family=Lobster+Two:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
- -->
-    <!--//fonts-->
+
     <script type="text/javascript" src="{% static 'mainpage/js/move-top.js' %}"></script>
     <script type="text/javascript" src="{% static 'mainpage/js/easing.js' %}"></script>
     <script type="text/javascript"
@@ -44,33 +40,6 @@
             });
         });
     </script>
-    <style type="text/css">
-        .dropdown-top {
-            position: relative;
-            display: inline-block;
-        }
-
-        .dropdown-content-top {
-            z-index: 10;
-            display: none;
-            position: absolute;
-            background-color: #fff;
-            min-width: 160px;
-            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-            padding: 0;
-        }
-
-        .dropdown-top:hover .dropdown-content-top {
-            display: block;
-        }
-
-        .dropdown-content-top a {
-            text-align: center;
-            display: block;
-            border-bottom: 1px solid #7a7a7a;
-            font-size: 0.1em;
-        }
-    </style>
 </head>
 
 <body>
@@ -82,51 +51,45 @@
                 {% if user.username != '' %}
                     <script type="text/javascript">
                         $(".header-grid").css("left", "70%");
+                        $(".header-grid").css("top", "3%");
                     </script>
                     <li style="margin-right: 10px">
                         <div class="dropdown-top">
-                            <a href="#">欢迎您，{{ user.username }}</a>
+                            <a href="#">Welcome，{{ user.username }}</a>
                             <div class="dropdown-content-top">
-                                <a href="{% url 'mainpage:personal_center' %}" style="font-size: 1.1em">个人中心</a>
-                                <a href="{% url 'login:log_out' %}" style="border-bottom: none;font-size: 1.1em">退出</a>
+                                <a href="{% url 'mainpage:personal_center' %}">Personal Center</a>
+                                <a href="{% url 'login:log_out' %}">Logout</a>
                             </div>
                         </div>
                     </li>
                     <li>
-                        <a href="{% url 'mainpage:shoppingcar' %}"><img class="shopping-car"
-                                                                        src="{% static 'mainpage/css/images/shoppingcar.png' %}">
+                        <a href="{% url 'mainpage:shoppingcar' %}"><img class="shopping-car" src="{% static 'mainpage/css/images/shoppingcar.png' %}">
                         </a>
                     </li>
                     {% if user.is_shop %}
-                        <li><a href="{% url 'shopmgr:index' %}" style="color: #7a7a7a">卖家中心</a></li>
+                        <li><a href="{% url 'shopmgr:index' %}" style="color: #7a7a7a">Order Manage</a></li>
+                    {% else %}
+                        <li><a href="#">Open Restaurant</a></li>
                     {% endif %}
-                        <li><a href="#">我要开店</a></li>
                 {% else %}
                     <script type="text/javascript">
-                        $(".header-grid").css("left", "85%");
+                        $(".header-grid").css("left", "70%");
+                        $(".header-grid").css("top", "3%");
                     </script>
-                    <li><a href="{% url 'login:index' %}">登录</a></li>
+                    <li><a href="{% url 'login:index' %}">Sign in</a></li>
                     <label>|</label>
-                    <li style="margin-right: 10px"><a href="{% url 'login:jmp_to_register' %}">注册</a></li>
+                    <li style="margin-right: 10px"><a href="{% url 'login:jmp_to_register' %}">Sign up</a></li>
                 {% endif %}
             </ul>
         </div>
         <div class="logo">
             <h1>
-                <a href="{% url 'mainpage:index' %}">点餐课设</a>
+                <a href="{% url 'mainpage:index' %}">Online Order</a>
             </h1>
             <a href="{% url 'mainpage:location' %}"
                style="margin-left:170px;font-size: 1em;color:#000;text-decoration: none;">我的位置：<span
                     class="my-location"></span></a>
             <div class="search" style="margin-top:-2.5em">
-                <!-- <form class="search-form">
-                    <input name="keyword" type="text" value="搜美食、搜商家、吃货的世界" onFocus="this.value = '';" onBlur="if (this.value == '') {this.value = '';}">
-                    <input type="submit" value="">
-                </form> -->
-                <div class="search-inner-div">
-                    <input name="keyword" type="text">
-                    <button class="submit-btn"></button>
-                </div>
                 <script type="text/javascript">
                     function myFun(result) {
                         var cityName = result.name;
@@ -134,36 +97,14 @@
                     }
                     var myCity = new BMap.LocalCity();
                     myCity.get(myFun);
-
-                    $("button.submit-btn").click(function () {
-                        alert("search clicked");
-                        var keywords = $.trim($(".search-inner-div input:first").val());
-                        console.log("搜索关键词：" + keywords);
-                        if (keywords != "") {
-                            queryShop(keywords);
-                        }
-
-
-                    });
-
-                    // $(".search-form").submit(function() {
-                    //     //调用查询；
-                    //     // alert("search clicked");
-                    //     var keywords = $.trim($(".search form input:first").val());
-                    //     console.log("搜索关键词：" + keywords);
-                    //     if (keywords != "") {
-                    //         queryShop(keywords);
-                    //     }
-                    // });
                 </script>
             </div>
         </div>
         <div class="banner">
             <div class="banner-in">
-                <!---->
                 <div class="wmuSlider example1">
                     <div class="wmuSliderWrapper">
-                        <article style="position: absolute; width: 100%; opacity: 0;">
+<!--                         <article style="position: absolute; width: 100%; opacity: 0;">
                             <div class="banner-wrap">
                                 <h2>Raesent coodo </h2>
                                 <h5>Mollis voluipun</h5>
@@ -183,7 +124,7 @@
                                 <h5>Mollis voluipun</h5>
                                 <p>Neque rutrum <span>enmos ligu sed lorbei</span></p>
                             </div>
-                        </article>
+                        </article> -->
                     </div>
                 </div>
                 <!---->
@@ -206,7 +147,7 @@
                     <li><a href="#">评价</a>
                         <label>|</label>
                     </li>
-                    <li>
+  <!--                   <li>
                         <div>
                             <a href="#">起送价筛选</a>
                             <select class="price_select">
@@ -216,13 +157,12 @@
                                 <option value="30">30元以下</option>
                             </select>
                         </div>
-                    </li>
+                    </li> -->
                 </ul>
             </div>
             <script type="text/javascript">
                 getShopInfoBySalesOrComments("销量", 1);
                 cur_page = 1;
-
                 $(".top-nav ul li").click(function () {
                     if ($(this).hasClass("active") == false) {
                         $(".top-nav ul li.active").removeClass("active");
@@ -236,12 +176,9 @@
                             getShopInfoBySalesOrComments($(this).find("a").html(), 1);
                         }
                         cur_page = 1;
-
-
                     }
 
                 });
-
                 $(".price_select").change(function () {
                     $(".top-nav ul li.active").removeClass("active");
                     $(".top-nav ul li:last").addClass("active");
@@ -260,85 +197,6 @@
         <div class="content-grid">
             <div class="food-grid">
                 <div class="cup">
-                    <div class="col-md-4 cup-in">
-                        <a href="#" data-shop-id="1"><img src="{% static 'mainpage/css/images/p6.jpg' %}"
-                                                          class="img-responsive" alt=""></a>
-                        <p>Lorem ipsum dolor sit consectetur</p>
-                        <div class="mainpage-num-data">
-                            <p class="mainpage-sales-num">已销售<span class="sales-num">530</span>份</p>
-                            <p class="mainpage-score-comment">评价<span class="score-comment">4.8</span>分</p>
-                        </div>
-                        <div class="details-in">
-                            <p>起送价<span class="deliver-min-price">10</span>元,配送费<span class="deliver-fee">2</span>元</p>
-                        </div>
-                        <div class="clearfix"></div>
-                    </div>
-                    <div class="col-md-4 cup-in">
-                        <a href="single.html" data-shop-id="1"><img src="{% static 'mainpage/css/images/p6.jpg' %}"
-                                                                    class="img-responsive" alt=""></a>
-                        <p>Lorem ipsum dolor sit consectetur</p>
-                        <div class="mainpage-num-data">
-                            <p class="mainpage-sales-num">已销售<span class="sales-num">530</span>份</p>
-                            <p class="mainpage-score-comment">评价<span class="score-comment">4.8</span>分</p>
-                        </div>
-                        <div class="details-in">
-                            <p>起送价<span class="deliver-min-price">10</span>元,配送费<span class="deliver-fee">2</span>元</p>
-                        </div>
-                        <div class="clearfix"></div>
-                    </div>
-                    <div class="col-md-4 cup-in">
-                        <a href="single.html" data-shop-id="1"><img src="{% static 'mainpage/css/images/p6.jpg' %}"
-                                                                    class="img-responsive" alt=""></a>
-                        <p>Lorem ipsum dolor sit consectetur</p>
-                        <div class="mainpage-num-data">
-                            <p class="mainpage-sales-num">已销售<span class="sales-num">530</span>份</p>
-                            <p class="mainpage-score-comment">评价<span class="score-comment">4.8</span>分</p>
-                        </div>
-                        <div class="details-in">
-                            <p>起送价<span class="deliver-min-price">10</span>元,配送费<span class="deliver-fee">2</span>元</p>
-                        </div>
-                        <div class="clearfix"></div>
-                    </div>
-                    <div class="col-md-4 cup-in">
-                        <a href="single.html" data-shop-id="1"><img src="{% static 'mainpage/css/images/p6.jpg' %}"
-                                                                    class="img-responsive" alt=""></a>
-                        <p>Lorem ipsum dolor sit consectetur</p>
-                        <div class="mainpage-num-data">
-                            <p class="mainpage-sales-num">已销售<span class="sales-num">530</span>份</p>
-                            <p class="mainpage-score-comment">评价<span class="score-comment">4.8</span>分</p>
-                        </div>
-                        <div class="details-in">
-                            <p>起送价<span class="deliver-min-price">10</span>元,配送费<span class="deliver-fee">2</span>元</p>
-                        </div>
-                        <div class="clearfix"></div>
-                    </div>
-                    <div class="col-md-4 cup-in">
-                        <a href="single.html" data-shop-id="1"><img src="{% static 'mainpage/css/images/p6.jpg' %}"
-                                                                    class="img-responsive" alt=""></a>
-                        <p>Lorem ipsum dolor sit consectetur</p>
-                        <div class="mainpage-num-data">
-                            <p class="mainpage-sales-num">已销售<span class="sales-num">530</span>份</p>
-                            <p class="mainpage-score-comment">评价<span class="score-comment">4.8</span>分</p>
-                        </div>
-                        <div class="details-in">
-                            <p>起送价<span class="deliver-min-price">10</span>元,配送费<span class="deliver-fee">2</span>元</p>
-                        </div>
-                        <div class="clearfix"></div>
-                    </div>
-                    <div class="col-md-4 cup-in">
-                        <a href="single.html" data-shop-id="1"><img src="{% static 'mainpage/css/images/p6.jpg' %}"
-                                                                    class="img-responsive" alt=""></a>
-                        <p>Lorem ipsum dolor sit consectetur</p>
-                        <div class="mainpage-num-data">
-                            <p class="mainpage-sales-num">已销售<span class="sales-num">530</span>份</p>
-                            <p class="mainpage-score-comment">评价<span class="score-comment">4.8</span>分</p>
-                        </div>
-                        <div class="details-in">
-                            <p>起送价<span class="deliver-min-price">10</span>元,配送费<span class="deliver-fee">2</span>元</p>
-                        </div>
-                        <div class="clearfix"></div>
-                    </div>
-                    <div class="clearfix"></div>
                 </div>
                 <script type="text/javascript">
                     $(".cup").on('click', ".cup .cup-in a", function (event) {
@@ -352,9 +210,9 @@
             <div class="clearfix"></div>
         </div>
         <div class="chooser-pager">
-            <button class="btn btn-info  prev-pager btn-lg" style="margin-right: 10px">上一页</button>
-            <button class="btn btn-info next-pager btn-lg" style="margin-left:10px">下一页</button>
-            <button class="clear-cart">清缓存</button>
+            <button class="btn btn-info  prev-pager btn-lg" style="margin-right: 10px">Previous</button>
+            <button class="btn btn-info next-pager btn-lg" style="margin-left:10px">Next</button>
+            <button class="btn btn-info  btn-lg" id="clear-cart" style="margin-left: 20px;">Clear Cart</button>
         </div>
         <script type="text/javascript">
             $(".prev-pager").click(function () {
@@ -386,10 +244,10 @@
 
             }
 
-            $(".clear-cart").click(function () {
-                alert("clicked");
+            $("#clear-cart").click(function () {
+                // alert("clicked");
                 $.get("/mainpage/flush_cart", function () {
-                    alert("缓存清除成功");
+                    alert("Clear cart successfully!");
 
                 });
             });
@@ -400,7 +258,7 @@
 <div class="footer">
     <div class="container">
         <div class="footer-bottom ">
-            <p class="footer-grid">Copyright &copy; 913106840634_王子扬 & 913106840638_汤林鸿</p>
+            <p class="footer-grid">Copyright &copy; ZIYANG WANG &amp; MIAO GAO</p>
         </div>
         <div class="clearfix"></div>
     </div>

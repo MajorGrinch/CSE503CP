@@ -145,8 +145,6 @@ function initialTable() {
                             location.reload();
                         }
                     });
-
-
             });
 
             $(".cancel-btn").click(function() {

@@ -10,6 +10,7 @@ from django.db.models import Count, Sum
 import decimal
 from django.contrib.sessions.backends.db import SessionStore
 from datetime import datetime
+from django.utils import timezone
 
 
 def index(request):
@@ -59,6 +60,7 @@ def add_address(request):
     consignee_tel = request.POST['consignphone']
     is_default = request.POST['moren']
     postcode = request.POST['postcode']
+    print(province)
     if is_default == '1':
         print("is default!")
         try:
@@ -357,7 +359,7 @@ def place_order(request):
     total_price = request.POST['total_price']
     user_id = request.user.id
     addr = Address.objects.filter(user_id_id=user_id, is_default=True)[0]
-    d = datetime.now()
+    d = timezone.now()
     o = Orders(order_num='{:%Y%m%d%H%M%S}{:d}'.format(d, user_id), order_time=d,
                total_price=total_price, status=0, shop_id_id=shop_id, user_id_id=user_id, address_id=addr)
     o.save()

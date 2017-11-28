@@ -7,200 +7,19 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>注册 | 点餐课设</title>
+    <title>Sign up| Online Order</title>
     <!-- Bootstrap -->
     <link href="{% static 'login/bootstrap.min.css' %}" rel="stylesheet" type="text/css">
     <link href="{% static 'login/css/mystyle.css' %}" rel="stylesheet" type="text/css">
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="{% static 'login/jquery-1.8.3.min.js' %}"></script>
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
-    <style>
-    @font-face {
-        font-family: 'PoiretOne-Regular';
-        src:url("{% static 'login/PoiretOneRegular.ttf' %}") format('truetype');
-    }
-
-    @font-face {
-        font-family: 'OpenSans-Regular';
-        src:url("{% static 'login/OpenSansRegular.ttf' %}") format('truetype');
-    }
-
-    .container {
-        padding-right: 0;
-        padding-left: 0;
-        margin-right: auto;
-        margin-left: auto;
-        width: 100%;
-    }
-
-    .header {
-        border-bottom: 3px ridge #FFA500;
-        padding: 1em 0;
-        width: 100%;
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-    .logo {
-        float: left;
-        margin-left: 13%;
-    }
-
-    .logo a {
-        font-size: 200%;
-        display: block;
-        text-decoration: none;
-        font-family: 'PoiretOne-Regular';
-        color: #DA6A3C;
-        font-weight: 100;
-    }
-
-    .logo span {
-        color: #222;
-    }
-
-    .myfooter {
-        position: fixed;
-        margin-right: 0;
-        margin-left: 0;
-        bottom: 5px;
-        width: 100%;
-    }
-
-    .copy {
-        border-top: 1px ridge rgba(11, 12, 16, 0.16);
-        padding-top: 1em;
-        padding-bottom: 0.5em;
-        padding-left: 0;
-        padding-right: 0;
-        text-align: center;
-        width: 100%;
-    }
-
-    .copy p {
-        color: #777;
-        font-size: 0.9em;
-        padding-left: 0;
-        padding-right: 0;
-        width: 100%;
-    }
-
-    .register_content {
-        padding-left: 15%;
-        padding-top: 5%;
-    }
-
-    .usernameTip {
-        color: #ff0000;
-        width: auto;
-        padding-left: 0px;
-        visibility: hidden;
-    }
-
-    .ensurePasswordTip {
-        color: #ff0000;
-        width: auto;
-        padding-left: 0px;
-        visibility: hidden;
-    }
-
-    button.ensure {
-        width: 200px;
-    }
-    </style>
-    <script>
-    $(document).ready(function() {
-        $(".ensure").click(function() {
-            // alert("click");
-            var username = $.trim($("#nameFocusedInput").val());
-            var password1 = $.trim($("#passwordFocusedInput").val());
-            var password2 = $.trim($("#ensurePasswordFocusedInput").val());
-            if (username != "" && password1 != "" && password2 != "") {
-                //form action
-                $.post("{% url 'login:register' %}", {
-                    user_name: username,
-                    user_pwd: password1,
-                    'csrfmiddlewaretoken': '{{csrf_token}}'
-                }, function(data, status) {
-                    if (data == 1) {
-                        alert("注册成功");
-                        location.href = "{% url 'mainpage:jmp_to_complete_info' %}";
-                        //成功；
-                    } else if (data == 2) {
-                        //插入数据失败；
-                    }
-
-                });
-
-
-            } else {
-                //存在空白未填项；
-                alert("请完整填写注册信息");
-            }
-        });
-
-        $("#nameFocusedInput").focusin(function() {
-            if ($.trim($(this).val()) != "" && $(".usernameTip").css("visibility") == "visible") {
-                $(".usernameTip").css("visibility", "hidden");
-            }
-        });
-
-
-
-        $("#nameFocusedInput").focusout(function() {
-            //alert("out");
-            var aName = $.trim($("#nameFocusedInput").val());
-            if (aName != "") {
-                //duplicated name
-                $.post("{% url 'login:duplicated_username' %}", {
-                    name: aName,
-                    'csrfmiddlewaretoken': '{{csrf_token}}'
-                }, function(data, status) {
-                    if (data == 0) {
-                        // alert("out1");
-                        //数据库中已存在该用户名
-                        $(".usernameTip").css("visibility", "visible");
-                    } else {
-                        //alert("out2:"+data);
-                        //数据库中不存在该用户名
-
-                    }
-                });
-            }
-        });
-
-
-        $("#ensurePasswordFocusedInput").focusout(function() {
-            var password1 = $.trim($("#passwordFocusedInput").val());
-            var password2 = $.trim($("#ensurePasswordFocusedInput").val());
-
-            if (password1 != "" && password2 != "" && password2 != password1) {
-                $(".ensurePasswordTip").css("visibility", "visible");
-
-            }
-
-        });
-
-        $("#ensurePasswordFocusedInput").focusin(function() {
-            if ($.trim($(this).val()) != "" && $(".ensurePasswordTip").css("visibility") == "visible") {
-                $(".ensurePasswordTip").css("visibility", "hidden");
-            }
-        });
-
-    });
-    </script>
+    <link href="{% static 'login/css/register_page.css' %}" rel="stylesheet" type="text/css">
+    <script src="{% static 'login/jquery-3.2.1.js' %}"></script>
 </head>
 
 <body>
     <div class="header">
         <div class="container">
             <div class="logo">
-                <a href="../index.html">点餐 <span>课设</span></a>
+                <a href="{% url 'mainpage:index' %}">Online <span>Order</span></a>
             </div>
         </div>
     </div>
@@ -208,18 +27,18 @@
         <form class="form-horizontal" role="form">
             {% csrf_token %}
             <div class="form-group">
-                <label class="col-sm-2 control-label">用户名</label>
+                <label class="col-sm-2 control-label">Username</label>
                 <div class="col-sm-10">
                     <div class="form-group">
                         <div class="col-sm-5">
                             <input class="form-control" id="nameFocusedInput" type="text" value="" name="user_name">
                         </div>
-                        <label class="col-sm-5 control-label usernameTip">用户名已存在!</label>
+                        <label class="col-sm-5 control-label usernameTip">Username already exist!</label>
                     </div>
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-2 control-label">创建密码</label>
+                <label class="col-sm-2 control-label">Create Password</label>
                 <div class="col-sm-10">
                     <div class="form-group">
                         <div class="col-sm-5">
@@ -230,27 +49,28 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-2 control-label">确认密码</label>
+                <label class="col-sm-2 control-label">Confirm Password</label>
                 <div class="col-sm-10">
                     <div class="form-group">
                         <div class="col-sm-5">
                             <input class="form-control" id="ensurePasswordFocusedInput" type="password" value="">
                         </div>
-                        <label class="col-sm-5 control-label ensurePasswordTip" for="ensurePasswordFocusedInput">密码确认错误!</label>
+                        <label class="col-sm-5 control-label ensurePasswordTip" for="ensurePasswordFocusedInput">Please confirm your password</label>
                     </div>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-2 control-label"></label>
-                <div class="col-sm-10">
+                <!-- <div class="col-sm-10"> -->
                     <div class="form-group">
                         <div class="col-sm-8">
-                            <button type="button" class="btn btn-success ensure">
-                                确认注册
+                            <button type="button" class="btn btn-success" id="signup_btn">
+                                Sign up
                             </button>
+                            <button type="button" class="btn btn-success" id="back_mainpage">Back</button>
                         </div>
                     </div>
-                </div>
+                <!-- </div> -->
             </div>
         </form>
     </div>
@@ -258,11 +78,85 @@
     <div class="myfooter">
         <div class="container">
             <div class="copy">
-                <p>Copyright &copy; 2015.Company name All rights reserved.</p>
+                <p>Copyright &copy; 2017. ZIYANG WANG &amp; MIAOGAO</p>
             </div>
         </div>
     </div>
     <!--footer-->
+    <script type="text/javascript">
+    $("#signup_btn").click(function() {
+        var username = $.trim($("#nameFocusedInput").val());
+        var password1 = $.trim($("#passwordFocusedInput").val());
+        var password2 = $.trim($("#ensurePasswordFocusedInput").val());
+        if (username != "" && password1 != "" && password2 != "" && password1 == password2) {
+            $.post("{% url 'login:register' %}", {
+                user_name: username,
+                user_pwd: password1,
+                'csrfmiddlewaretoken': '{{csrf_token}}'
+            }, function(data, status) {
+                if (data == 1) {
+                    //success
+                    alert("Sign up successfully");
+                    location.href = "{% url 'mainpage:jmp_to_complete_info' %}";
+                } else if (data == 2) {
+                    //failed
+                    alert("Sign up failed");
+                }
+
+            });
+        } else {
+            //something wrong
+            alert("Please fill all required fields correctly");
+        }
+    });
+
+    $('#back_mainpage').click(function(){
+        location.href = "{% url 'mainpage:index' %}";
+    });
+
+    $("#nameFocusedInput").focusin(function() {
+        if ($.trim($(this).val()) != "" && $(".usernameTip").css("visibility") == "visible") {
+            $(".usernameTip").css("visibility", "hidden");
+        }
+    });
+
+
+
+    $("#nameFocusedInput").focusout(function() {
+        //alert("out");
+        var aName = $.trim($("#nameFocusedInput").val());
+        if (aName != "") {
+            //duplicated name
+            $.post("{% url 'login:duplicated_username' %}", {
+                name: aName,
+                'csrfmiddlewaretoken': '{{csrf_token}}'
+            }, function(data, status) {
+                if (data == 0) {
+                    //existed username
+                    $(".usernameTip").css("visibility", "visible");
+                }
+            });
+        }
+    });
+
+
+    $("#ensurePasswordFocusedInput").focusout(function() {
+        var password1 = $.trim($("#passwordFocusedInput").val());
+        var password2 = $.trim($("#ensurePasswordFocusedInput").val());
+
+        if (password1 != "" && password2 != "" && password2 != password1) {
+            $(".ensurePasswordTip").css("visibility", "visible");
+
+        }
+
+    });
+
+    $("#ensurePasswordFocusedInput").focusin(function() {
+        if ($.trim($(this).val()) != "" && $(".ensurePasswordTip").css("visibility") == "visible") {
+            $(".ensurePasswordTip").css("visibility", "hidden");
+        }
+    });
+    </script>
 </body>
 
 </html>

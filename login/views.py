@@ -26,7 +26,6 @@ def authorize(request):
 
 def log_out(request):
     logout(request)
-    # return render(request, reverse("mainpage:index"))
     return render(request, 'mainpage/index.html')
 
 
@@ -41,8 +40,11 @@ def register_page(request):
 def register(request):
     name = request.POST['user_name']
     password = request.POST['user_pwd']
-    user = User.objects.create_user(name, password)
-    user.save()
+    try:
+        user = User.objects.create_user(name, password)
+        user.save()
+    except:
+        return HttpResponse(2)
     user = authenticate(username=name, password=password)
     login(request, user)
     return HttpResponse(1)

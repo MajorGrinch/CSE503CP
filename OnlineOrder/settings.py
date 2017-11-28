@@ -31,6 +31,7 @@ AUTH_USER_MODEL = 'login.User'
 # Application definition
 
 INSTALLED_APPS = [
+    'shopmgr.apps.ShopmgrConfig',
     'mainpage.apps.MainpageConfig',
     'login.apps.LoginConfig',
     'django.contrib.admin',
@@ -66,6 +67,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.media',
             ],
         },
     },
@@ -123,10 +125,11 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+print(MEDIA_ROOT)
+MEDIA_URL = '/media/'
