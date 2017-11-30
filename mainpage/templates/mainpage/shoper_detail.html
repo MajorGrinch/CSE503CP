@@ -30,7 +30,7 @@
     jQuery(document).ready(function($) {
         // var shop_id=request["shop_id"];
         console.log("shoper_detail get shop id:"+shopId);
-        //在此处获取店铺的信息和全部商品信息
+        //load all info about shop
         getShoperInfo(shopId);
         getAllFoods(shopId);
 
@@ -107,8 +107,8 @@
                             </div>
                         </div>
                         <div class="dropdown-content">
-                            <p style="margin-bottom: 10px"><b>商家地址：</b></p>
-                            <p><b>商家联系方式：</b></p>
+                            <p style="margin-bottom: 10px"></p>
+                            <p></p>
                         </div>
                     </div>
                     <script type="text/javascript">
@@ -120,22 +120,8 @@
                     <ul class="shop-detail-right-ul">
                         <li>
                             <div>
-                                <p><b></b>分</p>
-                                <p>商家评分</p>
-                            </div>
-                        </li>
-                        <h1 class="shop-detail-right-delimiter">|</h1>
-                        <li>
-                            <div>
-                                <p><b>15</b>分钟</p>
-                                <p>平均送餐时间</p>
-                            </div>
-                        </li>
-                        <h1 class="shop-detail-right-delimiter">|</h1>
-                        <li>
-                            <div>
-                                <p><b>15%</b></p>
-                                <p>及时送餐率</p>
+                                <p></p>
+                                <p>Ratings</p>
                             </div>
                         </li>
                     </ul>
@@ -160,12 +146,12 @@
                         });
                         $(".cup").on("click",".details-in a",function(event){
                             event.preventDefault();
-                            //---在这里将商品加入购物车；
+                            //add food to cart
                             var foodId=parseInt($(this).attr("data-food-id"));
                             console.log(foodId);
                             $.post("/mainpage/add_to_shopcar",{csrfmiddlewaretoken:'{{csrf_token}}',food_id:foodId,shop_id:shopId},function(data,status){
                                 if(data==1){
-                                    alert("已加入购物车");
+                                    alert("Added to cart.");
                                 }
 
                             });
@@ -182,7 +168,7 @@
     <div class="footer">
         <div class="container">
             <div class="footer-bottom ">
-                <p class="footer-grid">Copyright &copy; 2015.Company name All rights reserved.More Templates </p>
+                <p class="footer-grid">Copyright &copy; ZIYANG WANG and MIAO GAO</p>
             </div>
             <div class="clearfix"> </div>
         </div>

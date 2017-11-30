@@ -20,7 +20,7 @@ function getAllFoods(shopId) {
     console.log(shopId);
     $.post("/mainpage/get_merchandises", { shop_id: shopId, csrfmiddlewaretoken: csrftoken }, function(data, status) {
         var obj = JSON.parse(data);
-        console.log(data);
+        // console.log(data);
         var arrayObj = obj.foodsArray;
         var arrayLen = arrayObj.length;
         for (var i = 0; i < arrayLen; i++) {
@@ -33,11 +33,11 @@ function getAllFoods(shopId) {
              var aRow;
             if ((i + 1) % 3 == 0) {
                 console.log("hahahahah");
-                 aRow = '<div class="col-md-4 cup-in" style="margin-right:0"><a href="#"><img src=\"/media/' + shopImagePath + '\" class="img-responsive" alt=""></a><p>' + foodName + '</p><span class="dollar">' + foodPrice + '</span>' + '<div class="details-in"><a href="#" class="details" data-food-id=' + foodId + ' data-shop-id=' + shop_id + '>+</a><p class="month-sales-p">月销售<span class="month-sales-span">' + monthSales + '</span>份</p></div><div class="clearfix"></div></div>';
+                 aRow = '<div class="col-md-4 cup-in" style="margin-right:0"><a href="#"><img src=\"/media/' + shopImagePath + '\" class="img-responsive" alt=""></a><p>' + foodName + '</p><span class="dollar">' + foodPrice + '</span>' + '<div class="details-in"><a href="#" class="details" data-food-id=' + foodId + ' data-shop-id=' + shop_id + '>+</a></div><div class="clearfix"></div></div>';
 
             }else{
                 console.log("22");
-                 aRow = '<div class="col-md-4 cup-in"><a href="#"><img src=\"/media/' + shopImagePath + '\" class="img-responsive" alt=""></a><p>' + foodName + '</p><span class="dollar">' + foodPrice + '</span>' + '<div class="details-in"><a href="#" class="details" data-food-id=' + foodId + ' data-shop-id=' + shop_id + '>+</a><p class="month-sales-p">月销售<span class="month-sales-span">' + monthSales + '</span>份</p></div><div class="clearfix"></div></div>';
+                 aRow = '<div class="col-md-4 cup-in"><a href="#"><img src=\"/media/' + shopImagePath + '\" class="img-responsive" alt=""></a><p>' + foodName + '</p><span class="dollar">' + foodPrice + '</span>' + '<div class="details-in"><a href="#" class="details" data-food-id=' + foodId + ' data-shop-id=' + shop_id + '>+</a></div><div class="clearfix"></div></div>';
 
             }
             $(".cup").append(aRow);
@@ -51,6 +51,7 @@ function getAllFoods(shopId) {
 function getShoperInfo(shopId) {
     $.post("/mainpage/get_spec_shopinfo", { shop_id: shopId, csrfmiddlewaretoken:csrftoken }, function(data, status) {
         var obj = JSON.parse(data);
+        console.log(obj);
         var shopName = obj.shopname;
         var leastPrice = obj.least_price;
         var deliverFee = obj.deliver_fee;
@@ -59,13 +60,13 @@ function getShoperInfo(shopId) {
         var shopAddress = obj.address;
         var shopPhone = obj.cellphone;
         $(".part-detail-ul li.shop-name").text(shopName);
-        $(".part-detail-ul li.illustration").text("起送价" + leastPrice + "元,配送费" + deliverFee + "元");
-        $(".dropdown-content p:first").html("<b>商家地址：</b>" + shopAddress);
-        $(".dropdown-content p:last").html("<b>商家联系方式：</b>" + shopPhone);
-        $(".shop-detail-right-ul li:first p:first").html("<b>" + commentScore + "</b>分");
+        $(".part-detail-ul li.illustration").text("least price: " + leastPrice + " $, deliver fee" + deliverFee + " $");
+        $(".dropdown-content p:first").html("<b>Address: </b>" + shopAddress);
+        $(".dropdown-content p:last").html("<b>Cellphone: </b>" + shopPhone);
+        $(".shop-detail-right-ul li:first p:first").html("<b>" + commentScore + "</b>");
     });
 }
 
 function getLocationDescribe(){
-    //获取地址
+    //get location
 }

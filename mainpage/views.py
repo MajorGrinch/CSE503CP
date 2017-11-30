@@ -10,6 +10,7 @@ from django.db.models import Count, Sum
 import decimal
 from django.contrib.sessions.backends.db import SessionStore
 from datetime import datetime
+import re
 from django.utils import timezone
 
 
@@ -18,7 +19,6 @@ def index(request):
 
 
 def complete_info(request):
-    # print(request.user.username + str(request.user.id))
     curr_user = User.objects.get(pk=request.user.id)
     try:
         province = request.POST['province']
@@ -161,7 +161,8 @@ def conf_default_addr(request):
     try:
         addr_id = int(request.POST['default_addr_id'])
         # print(addr_id)
-        Address.objects.filter(user_id=request.user, is_default=True).update(is_default=False)
+        Address.objects.filter(user_id=request.user,
+                               is_default=True).update(is_default=False)
         default_user = Address.objects.get(pk=addr_id)
         default_user.is_default = True
         default_user.save()
@@ -196,7 +197,8 @@ def json_serialize(obj):
 
 
 def show_shops_orderby_sales(request):
-    all_orders = Orders.objects.values('shop_id_id').annotate(Count('shop_id_id'))
+    all_orders = Orders.objects.values(
+        'shop_id_id').annotate(Count('shop_id_id'))
     # print(list(all_orders))
     all_shop_list = list(Shop.objects.order_by('id').values())
     all_shop_dict = {}
@@ -227,6 +229,7 @@ def get_merchandises(request):
 
 
 def get_spec_shopinfo(request):
+    print(request.user.id)
     shop_id = request.POST['shop_id']
     shop = Shop.objects.get(pk=shop_id)
     user_id = shop.user_id_id
@@ -234,12 +237,12 @@ def get_spec_shopinfo(request):
     addr = Address.objects.get(user_id_id=user_id)
     response_data = {}
     response_data['shopname'] = shop.shopname
-    response_data['least_price'] = shop.least_price;
-    response_data['deliver_fee'] = shop.deliver_fee;
-    response_data['review_score'] = float(shop.review_score);
-    response_data['shop_img'] = str(shop.shop_img);
-    response_data['cellphone'] = user.cellphone;
-    response_data['address'] = addr.city + '市' + addr.street;
+    response_data['least_price'] = shop.least_price
+    response_data['deliver_fee'] = shop.deliver_fee
+    response_data['review_score'] = float(shop.review_score)
+    response_data['shop_img'] = str(shop.shop_img)
+    response_data['cellphone'] = user.cellphone
+    response_data['address'] = addr.street + ', ' + addr.city
     print(response_data)
     return HttpResponse(json.dumps(response_data))
 
@@ -335,10 +338,11 @@ def get_my_threemonth_order(request):
             good['title'] = merchandise.title
             good['image'] = str(merchandise.image)
             good['price'] = merchandise.price
-        print(goods_list)
+        # print(goods_list)
         order['merchandise_array'] = goods_list
     # print(order_list)
     response_data = {}
+    print(order_list)
     response_data['order_array'] = order_list
     return HttpResponse(json.dumps(response_data, default=json_serialize))
 
@@ -375,8 +379,72 @@ def place_order(request):
     goods_list = request.session['cart'][shop_id]
     goods = {x: goods_list.count(x) for x in goods_list}
     for good_id in goods.keys():
-        od = OrderDetail(merchan_num=goods[good_id], merchan_id_id=good_id, order_id=o)
+        od = OrderDetail(
+            merchan_num=goods[good_id], merchan_id_id=good_id, order_id=o)
         od.save()
     del request.session['cart'][shop_id]
     request.session.save()
     return HttpResponse(1)
+
+
+def register_shop(request):
+    user_id = request.user.id
+    user = User.objects.get(pk=user_id)
+    user.is_shop = 1
+    print(user)
+    shop = Shop(user_id_id=user_id, least_price=10, deliver_fee=1,
+                review_score=4.0)
+    shop.save()
+    user.save()
+    return render(request, 'shopmgr/index.html')
+
+
+def confirm_order(request):
+    orderNum = request.POST['orderNum']
+    order = Orders.objects.get(order_num=orderNum)
+    if order.status == 1:
+        order.status = 2
+        order.save()
+        return HttpResponse(1)
+    else:
+        return HttpResponse(2)
+
+
+def change_email(request):
+    if request.method == 'POST':
+        new_email = request.POST['new_email']
+        if not re.match(r'[^@]+@[^@]+\.[^@]+', new_email):
+            return HttpResponse(0)
+        userid = request.user.id
+        user = User.objects.get(pk=userid)
+        user.email = request.POST['new_email']
+        user.save()
+        return HttpResponse(1)
+    return HttpResponse(0)
+
+
+def cancel_sepc_order(request):
+    if request.method == 'POST':
+        shopid = request.POST['shopid']
+        cart = request.session.get('cart', None)
+        if(cart[shopid]):
+            cart.pop(shopid)
+            request.session.save()
+            print('cart')
+            print(request.session['cart'])
+            return HttpResponse(1)
+    return HttpResponse(0)
+
+
+def delete_food_from_order(request):
+    if request.method == 'POST':
+        shopid = request.POST['shopid']
+        goodid = request.POST['goodid']
+        cart = request.session.get('cart', None)
+        if cart[shopid]:
+            cart[shopid] = list(filter(lambda a: a != goodid, cart[shopid]))
+            request.session.save()
+            print(request.session['cart'])
+            return HttpResponse(1)
+        return HttpResponse(0)
+        

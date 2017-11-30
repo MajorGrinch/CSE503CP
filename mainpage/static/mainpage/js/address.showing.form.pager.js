@@ -36,12 +36,12 @@ function showChoosedPage(pageNumber) {
             var consignee = arrayObj[i].consignee;
             var address = arrayObj[i].province + arrayObj[i].city + arrayObj[i].county + arrayObj[i].street + " " + arrayObj[i].postcode;
             var consigneePhone = arrayObj[i].consignee_tel;
-            var aRow = '<tr><td width="15%">' + consignee + '</td><td width="40%">' + address + '</td><td width="20%">' + consigneePhone + '</td><td width="25%">' + '<a href="#" class="delete_a" data-addr-id=' + addressId + '>删除</a>';
-            if (isDefault == 1) { //为默认地址
-                aRow = aRow + '<label  class="default_label" style="margin-left:3px" data-addr-id=' + addressId + '>默认地址</label></td></tr>';
+            var aRow = '<tr><td width="15%">' + consignee + '</td><td width="40%">' + address + '</td><td width="20%">' + consigneePhone + '</td><td width="25%">' + '<a href="#" class="delete_a" data-addr-id=' + addressId + '>Delete</a>';
+            if (isDefault == 1) { //is default address
+                aRow = aRow + '<label  class="default_label" style="margin-left:3px" data-addr-id=' + addressId + '>Default Address</label></td></tr>';
 
             } else {
-                aRow = aRow + '<a href="#" class="config_default_a" style="margin-left:3px" data-addr-id=' + addressId + '>设为默认地址</a></td></tr>';
+                aRow = aRow + '<a href="#" class="config_default_a" style="margin-left:3px" data-addr-id=' + addressId + '>Set Default</a></td></tr>';
 
             }
             $(aRow).appendTo(".customer-form tbody");
@@ -63,7 +63,7 @@ function showAddrTable(addr_total_num) {
     }
     $('<table></table>').appendTo(".addr-list");
     $(".addr-list table").addClass("customer-form");
-    $('<thead><tr><th>收货人</th><th>收货地址</th><th>手机号</th><th>操作</th></tr><<thead><tbody></tbody>').appendTo(".customer-form");
+    $('<thead><tr><th>Consignee</th><th>Address</th><th>Cellphone</th><th>Operation</th></tr><<thead><tbody></tbody>').appendTo(".customer-form");
     showChoosedPage(1);
     var paginationElement = '<ul class="pagination address-form-pagination"><li class="previous-page-li"><a href="#">&laquo;</a></li>';
     if (page_count < show_count) {
@@ -98,16 +98,16 @@ function enableOptionForForm() {
             csrfmiddlewaretoken: csrftoken,
             address_id: addressId
         }, function(data, status) {
-            if (data == 1) { //删除成功
-                alert("删除成功");
+            if (data == 1) { //delete success
+                alert("Delete successfully!");
 
-                //重新获得地址列表
+                //reload address table
                 $.get("/mainpage/get_address_count", function(data, status) { //获得用户地址信息数
                     addrs_total_num = data;
                     $(".addr-list").empty();//先清除已展示的地址；
                     if (data == 0) {
                         isFirstAddress = 1;
-                        $('<h5>您还没有添加任何地址信息，赶快添加吧！</h5>').appendTo(".addr-list");
+                        $('<h5>You do not have an address. Please Add one.</h5>').appendTo(".addr-list");
                     } else {
                         showAddrTable(data);
                     }
@@ -128,13 +128,13 @@ function enableOptionForForm() {
         //设置默认地址，传入的参数为将要设置为默认地址的地址ID
         $.post("/mainpage/conf_default_addr", { csrfmiddlewaretoken: csrftoken, default_addr_id: defaultAddressId }, function(data, status) {
             if (data == 1) {
-                alert("设置成功");
-                $.get("/mainpage/get_address_count", function(data, status) { //获得用户地址信息数
+                alert("Set successfully!");
+                $.get("/mainpage/get_address_count", function(data, status) { //get number of user address
                     addrs_total_num = data;
-                    $(".addr-list").empty(); //先清除已展示的地址；
+                    $(".addr-list").empty(); //clear address table
                     if (data == 0) {
                         isFirstAddress = 1;
-                        $('<h5>您还没有添加任何地址信息，赶快添加吧！</h5>').appendTo(".addr-list");
+                        $('<h5>You do not have an address. Please Add one.</h5>').appendTo(".addr-list");
                     } else {
                         showAddrTable(data);
                     }

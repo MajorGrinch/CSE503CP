@@ -16,4 +16,5 @@ urlpatterns = [
     url(r'^jmp_to_manage_goods$', views.jmp_to_manage_goods, name="jmp_to_manage_goods"),
     url(r'^delete_good$', views.delete_good, name="delete_good"),
     url(r'^confirm_order$', views.confirm_order, name="confirm_order"),
+    url(r'^decline_order$', views.decline_order, name="decline_order"),
 ]

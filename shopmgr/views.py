@@ -51,6 +51,7 @@ def show_today_orders_shop(request):
 
     # print(order_list)
     response_data = {}
+    print(order_list)
     response_data['orders'] = order_list
     return HttpResponse(json.dumps(response_data, default=json_serialize))
 
@@ -102,16 +103,19 @@ def show_personal_info(request):
 def add_icon(request):
     if request.method == 'POST':
         shop = Shop.objects.get(user_id_id=request.user.id)
+        # if request.FILES['icon'] is not None:
         image_file = request.FILES['icon']
         deliver_fee = int(request.POST['deliver_fee'])
         least_price = int(request.POST['least_price'])
         shopname = request.POST['shopname']
+        # print(request.POST.items().values())
         try:
-            Shop.objects.filter(user_id_id=request.user.id).update(
-                shopname=shopname, deliver_fee=deliver_fee, least_price=least_price)
+            shop.deliver_fee = deliver_fee
+            shop.least_price = least_price
+            shop.shopname = shopname
             if image_file:
                 shop.shop_img = image_file
-                shop.save()
+            shop.save()
             return HttpResponseRedirect(reverse("shopmgr:complete_shopinfo"))
         except:
             return render(request, 'shopmgr/complete_shopinfo.html',
@@ -158,3 +162,13 @@ def confirm_order(request):
     order.status = 1
     order.save()
     return HttpResponse(1)
+
+def decline_order(request):
+    orderNum = request.POST['orderNum']
+    try:
+        order = Orders.objects.get(order_num=orderNum)
+        order.status = 3
+        order.save()
+        return HttpResponse(1)
+    except: 
+        return HttpResponse(0)

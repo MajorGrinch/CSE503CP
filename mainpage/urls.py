@@ -44,4 +44,9 @@ urlpatterns = [
     url(r'^get_merchan_by_id$', views.get_merchan_by_id,
         name="get_merchan_by_id"),
     url(r'^place_order$', views.place_order, name="place_order"),
+    url(r'^register_shop$', views.register_shop, name='register_shop'),
+    url(r'^confirm_order$', views.confirm_order, name="confirm_order"),
+    url(r'^change_email$', views.change_email, name='change_email'),
+    url(r'^cancel_spec_order$', views.cancel_sepc_order, name='cancel_spec_order'),
+    url(r'^delete_food_from_order$', views.delete_food_from_order, name='delete_food_from_order'),
 ]

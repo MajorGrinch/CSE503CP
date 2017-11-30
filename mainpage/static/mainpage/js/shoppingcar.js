@@ -44,7 +44,7 @@ function initialTable() {
     $(".shoppingcar-container").empty();
     $.get("/mainpage/get_cart", function(data, status) {
         if (data == 0) {
-            $(".shoppingcar-container").append("<p>购物车为空</p>");
+            $(".shoppingcar-container").append("<p>Cart is empty</p>");
         } else {
             var obj = JSON.parse(data);
             var arrayObj = obj.shoppingcar_array;
@@ -73,14 +73,14 @@ function initialTable() {
                     foodName = itemsObj[kk].food_name;
                     foodImg = itemsObj[kk].food_img;
                     aRow = '<tr><td width="60%" colspan="2" class="description"><ul><li><img data-food-id=' + merchId + ' src=\"/media/' + foodImg + '\"  class="food-img"></li><li><div class="shoppingcar-description"><p>' + foodName + '</p><p><span class="count">' + merchanCount + '</span><span class="multiply">x</span><span class="dollar">' +
-                        foodPrice + '</span></p></div></li></ul></td><td width="40%" class="operation"><ul><li><button class="decrease">-</button><input class="good-count" type="text" value=' + merchanCount + '></input><button class="plus">+</button></li><li class="delete-li"><button class="btn btn-danger delete">删除</button></li></ul></td></tr>';
+                        foodPrice + '</span></p></div></li></ul></td><td width="40%" class="operation"><ul><li><button class="decrease">-</button><input class="good-count" type="text" value=' + merchanCount + '></input><button class="plus">+</button></li><li class="delete-li"><button class="btn btn-danger delete">Delete</button></li></ul></td></tr>';
                     $tableBody.append(aRow);
                     //  total_price += foodPrice * merchanCount;
 
 
                 }
                 // total_price += shopDeliverFee;
-                var aFooter = '<tfoot><tr><td colspan="3"><div class="total-price-div"><h4><b>总价:</b><span class="dollar total-price"></span></h4></div><div class="clearfix"></div><p><b>+配送费</b><span class="deliver-dollar">' + shopDeliverFee + '</span>元</p></td></tr><tr><td colspan="3"><ul><li><button class="btn btn-info ensure-btn" >确定下单</button></li><li><button class="btn btn-link cancel-btn">取消</button></li></ul></td></tr>';
+                var aFooter = '<tfoot><tr><td colspan="3"><div class="total-price-div"><h4><b>Total Price:</b><span class="dollar total-price"></span></h4></div><div class="clearfix"></div><p><b>+ deliver fee </b><span class="deliver-dollar">' + shopDeliverFee + '</span> $</p></td></tr><tr><td colspan="3"><ul><li><button class="btn btn-info ensure-btn" >Place order</button></li><li><button class="btn btn-link cancel-btn">Cancel</button></li></ul></td></tr>';
                 // var aFooter = '<tfoot><tr><td colspan="3"><div class="total-price-div"><h4><b>总价:</b><span class="dollar total-price">' + total_price + '</span></h4></div><div class="clearfix"></div><p><b>+配送费</b><span class="deliver-dollar">' + shopDeliverFee + '</span>元</p></td></tr><tr><td colspan="3"><ul><li><button class="btn btn-info" onclick=\"place_order(' + shop_id + ',' + total_price + ')\">确定下单</button></li><li><button class="btn btn-link cancel">取消</button></li></ul></td></tr>';
                 $(".shoppingcar-container #customers:last").append(aFooter);
                 // total_price = 0;
@@ -117,8 +117,22 @@ function initialTable() {
             $(".delete").on("click", function() {
                 var goodId=$(this).parents("tr").find(".food-img").attr("data-food-id");
                 //根据goodId删除cache中与该商品相关的数据
-
-
+                var shopId = $(this).parents('table').attr('data-shop-id');
+                // alert(goodId + ' ' + shopId);
+                $.post('delete_food_from_order', 
+                        {
+                            csrfmiddlewaretoken: csrftoken,
+                            shopid: shopId,
+                            goodid: goodId
+                        }
+                ).done(function(data){
+                    if(data == 1){
+                        alert('Delete successfully');
+                    }
+                    else{
+                        alert('Delete failed');
+                    }
+                });
                 var $table = $(this).parents("table");
                 var isEmpty = checkTableEmpty($table);
                 if (isEmpty == false) {
@@ -149,11 +163,12 @@ function initialTable() {
 
             $(".cancel-btn").click(function() {
                 var shopId=$(this).parents("table").attr("data-shop-id");
-                //根据shopId删除cache中与某一商店相关的所有数据；
-
-
                 cancelOrder($(this).parents("table"));
-
+                $.post('cancel_spec_order', {shopid: shopId, csrfmiddlewaretoken: csrftoken})
+                .done(function(data){
+                    alert(data);
+                    location.reload(true);
+                });
             });
 
             //计算每个table的价格
@@ -182,8 +197,7 @@ function checkTableEmpty($table) {
 function cancelOrder($table) {
     $table.remove();
     if ($(".shoppingcar-container").find("table").length == 0) {
-        $(".shoppingcar-container").append("<p>购物车为空</p>");
-
+        $(".shoppingcar-container").append("<p>Cart is empty</p>");
     }
 }
 
