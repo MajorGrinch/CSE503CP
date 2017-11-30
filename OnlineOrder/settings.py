@@ -25,7 +25,7 @@ SECRET_KEY = 'got@&1cx6y&=a3g2f31uy2zsbq_09mv4w-d$ul@6)@zyxwi0af'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]', '54.164.148.6']
 
 AUTH_USER_MODEL = 'login.User'
 # Application definition
