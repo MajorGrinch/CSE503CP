@@ -20,13 +20,13 @@
     <script src="{% static 'mainpage/js/add.address.js' %}"></script>
     <script src="{% static 'mainpage/js/address.showing.form.pager.js' %}"></script>
 
-    <script type="text/javascript">
+    <script>
     window.onerror = function(sMessage, sUrl, sLine) {
         alert("error\n" + sMessage + "\nURL:" + sUrl + "\nLine Number:" + sLine);
     }
     </script>
 
-    <script type="text/javascript">
+    <script>
 
     var isFirstAddress = 0;
     $(document).ready(function() {
@@ -280,10 +280,10 @@
                     <h4 class="modal-title" id="changePasswordModalLabel">Update email</h4>
                 </div>
                 <div class="modal-body">
-                    <form class="form-horizontal" id="regForm" role="form">
+                    <form class="form-horizontal" id="regForm">
                         <div class="form-group">
                             <label class="col-sm-3 control-label require-label">New email</label>
-                            <input type="text" id="new_email_input" autocomplete="off"></input>
+                            <input type="text" id="new_email_input" autocomplete="off"/>
                         </div>
                     </form>
                 </div>
@@ -311,7 +311,7 @@
                         <form class="form-horizontal address-form" role="form">
                             <div class="form-group">
                                 <label class="col-xs-2  control-label require-label">Area</label>
-                                <div class "col-xs-10">
+                                <div class="col-xs-10">
                                     <div class="form-group">
                                         <div class="col-xs-4 select-div">
                                             <label for="province_select_id">State</label>
@@ -344,7 +344,7 @@
                                 <div class="col-xs-10">
                                     <div class="form-group">
                                         <div class="col-xs-5">
-                                            <input class="form-control postcodeInput"></input>
+                                            <input class="form-control postcodeInput">
                                         </div>
                                         <label class="col-xs-5 control-label postcodeTip errorTip">Please fill the zipcode!</label>
                                     </div>
@@ -355,7 +355,7 @@
                                 <div class="col-xs-10">
                                     <div class="form-group">
                                         <div class="col-xs-5">
-                                            <input class="form-control consigneeInput"></input>
+                                            <input class="form-control consigneeInput">
                                         </div>
                                         <label class="col-xs-5 control-label consigneeTip errorTip">Please fill the consignee!</label>
                                     </div>
@@ -366,7 +366,7 @@
                                 <div class="col-xs-10">
                                     <div class="form-group">
                                         <div class="col-xs-5">
-                                            <input class="form-control phoneInput"></input>
+                                            <input class="form-control phoneInput">
                                         </div>
                                         <label class="col-xs-5 control-label phoneTip errorTip">Cellphone!</label>
                                     </div>
@@ -406,15 +406,15 @@
                     <form class="form-horizontal" id="regForm" role="form">
                         <div class="form-group">
                             <label class="col-sm-3 control-label require-label">Current Password</label>
-                            <input type="password" id="originPassword" name="originPassword" class="item-text" autocomplete="off"></input>
+                            <input type="password" id="originPassword" name="originPassword" class="item-text" autocomplete="off">
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label require-label">New Password</label>
-                            <input type="password" id="newPassword" name="newPassword" class="item-text" placeholder="new password"></input>
+                            <input type="password" id="newPassword" name="newPassword" class="item-text" placeholder="new password">
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label require-label">Confirm New Password</label>
-                            <input type="password" name="repassword" class="item-text" placeholder="confirm"></input>
+                            <input type="password" name="repassword" class="item-text" placeholder="confirm">
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label"></label>
@@ -441,7 +441,7 @@
     <header>
         <div class="header-top-bar">
             <ul class="header-grid">
-                <script type="text/javascript">
+                <script>
                 $(".header-grid").css("left", "70%");
                 </script>
                 <li style="margin-right: 10px">
@@ -484,7 +484,7 @@
         <div class="personal-center-content-right tab-content" id="personal_center_right">
             <div class="tab-pane fade in orders-div in" id="three-moths-orders">
                 <div class="orders-list" id="orders-list">
-                    <script type="text/javascript">
+                    <script>
 
                         $("#order").each(function(){
                             if($(this).find(".has-gotten-goods").length==1){
@@ -554,7 +554,7 @@
         <div class="clearfix"></div>
     </div>
 
-    <script type="text/javascript">
+    <script>
         $('#personal_center_right').on('click', '.need-confirm', function(){
             var orderNum = $(this).parents('table').attr('val');
             $.post("{% url 'mainpage:confirm_order' %}", {
