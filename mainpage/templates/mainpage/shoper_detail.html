@@ -79,19 +79,9 @@
             </div>
             <div class="logo">
                 <h1>
-                    <a href="{% url 'mainpage:index' %}">Online Order</a>
-                </h1>
-                <a href="{% url 'mainpage:location' %}" style="margin-left:170px;font-size: 1em;color:#000;text-decoration: none;">我的位置：<span class="my-location"></span></a>
-                <div class="search" style="margin-top:-2.5em">
-                    <form>
-                        <input type="text" value="Search store here ..." onFocus="this.value = '';" onBlur="if (this.value == '') {this.value = '';}">
-                        <input type="submit" value="">
-                    </form>
-                </div>
-                <script type="text/javascript">
-                   var locationDescribe=getLocationDescribe();
-                   $(".myLocation").text(locationDescribe);
-                </script>
+                <a href="{% url 'mainpage:index' %}">Online Order</a>
+            </h1>
+                <a href="{% url 'mainpage:location' %}" style="margin-left:170px;font-size: 1em;color:#000;text-decoration: none;">My Position</a>
             </div>
             <div class="header-bottom" style="background: #fff;margin-bottom: 1em">
                 <div class="shoper-detail-bar">

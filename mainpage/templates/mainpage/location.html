@@ -4,204 +4,120 @@
 <head>
     {% load static %}
     <title>Home</title>
-    <link href="{% static 'mainpage/css/bootstrap.css' %}" rel="stylesheet" type="text/css"/>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no"/>
-    <!--     <style type="text/css">
-    body,
-    html,
-    #allmap {
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-        margin: 0;
-        font-family: "微软雅黑";
-    }
-    </style> -->
-    <style type="text/css" media="screen">
-        #allmap {
-            width: 1120px;
-            height: 600px;
-            overflow: hidden;
-            margin: auto;
-        }
-    </style>
-    <script src="http://api.map.baidu.com/api?v=2.0&ak=rEBP1W4qQuU4ZGNpAEIvgY9aIGKddNih"
-            type="text/javascript"></script>
-    <link href="{% static 'mainpage/css/indexstyle.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'mainpage/css/bootstrap.css' %}" rel="stylesheet" type="text/css" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <link href="{% static 'mainpage/css/indexstyle.css' %}" rel="stylesheet" type="text/css" />
     <script src="{% static 'mainpage/js/jquery.min.js' %}" type="text/javascript" charset="utf-8"></script>
+    <style type="text/css" media="screen">
+    #allmap {
+        width: 1120px;
+        height: 600px;
+        overflow: hidden;
+        margin: auto;
+    }
+    </style>
 </head>
 
 <body>
-<div class="header">
-    <div class="container">
-        <div class="header-top-bar">
-            <ul class="header-grid">
-                {% if user.username != '' %}
+    <div class="header">
+        <div class="container">
+            <div class="header-top-bar">
+                <ul class="header-grid">
+                    {% if user.username != '' %}
                     <script type="text/javascript">
-                        $(".header-grid").css("left", "70%");
+                    $(".header-grid").css("left", "70%");
+                    $(".header-grid").css("top", "3%");
                     </script>
                     <li style="margin-right: 10px">
                         <div class="dropdown-top">
-                            <a href="#">欢迎您，{{ user.username }}</a>
+                            <a href="#">Welcome，{{ user.username }}</a>
                             <div class="dropdown-content-top">
-                                <a href="{% url 'mainpage:personal_center' %}" style="font-size: 1.1em">个人中心</a>
-                                <a href="{% url 'login:log_out' %}" style="border-bottom: none;font-size: 1.1em">退出</a>
+                                <a href="{% url 'mainpage:personal_center' %}">Personal Center</a>
+                                <a href="{% url 'login:log_out' %}">Logout</a>
                             </div>
                         </div>
                     </li>
                     <li>
-                        <a href="{% url 'mainpage:shoppingcar' %}"><img class="shopping-car"
-                                                                        src="{% static 'mainpage/css/images/shoppingcar.png' %}"/>
+                        <a href="{% url 'mainpage:shoppingcar' %}"><img class="shopping-car" src="{% static 'mainpage/css/images/shoppingcar.png' %}">
                         </a>
                     </li>
-                    <li><a href="{% url 'shopmgr:index' %}" style="color: #7a7a7a">卖家中心</a></li>
-                {% else %}
+                    {% if user.is_shop %}
+                    <li><a href="{% url 'shopmgr:index' %}" style="color: #7a7a7a">Order Manage</a></li>
+                    {% else %}
+                    <li><a href="{% url 'mainpage:register_shop' %}">Open Restaurant</a></li>
+                    {% endif %} {% else %}
                     <script type="text/javascript">
-                        $(".header-grid").css("left", "85%");
+                    $(".header-grid").css("left", "70%");
+                    $(".header-grid").css("top", "3%");
                     </script>
-                    <li><a href="{% url 'login:index' %}">登录</a></li>
+                    <li><a href="{% url 'login:index' %}">Sign in</a></li>
                     <label>|</label>
-                    <li style="margin-right: 10px"><a href="{% url 'login:jmp_to_register' %}">注册</a></li>
-                {% endif %}
-            </ul>
-        </div>
-        <div class="logo">
-            <h1>
-                <a href="{% url 'mainpage:index' %}">点餐课设</a>
+                    <li style="margin-right: 10px"><a href="{% url 'login:jmp_to_register' %}">Sign up</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+            <div class="logo">
+                <h1>
+                <a href="{% url 'mainpage:index' %}">Online Order</a>
             </h1>
-            <a href="{% url 'mainpage:location' %}"
-               style="margin-left:170px;font-size: 1em;color:#000;text-decoration: none;">我的位置：<span
-                    class="my-location"></span></a>
-            <div class="search" style="margin-top:-2.5em">
-                <!-- <form class="search-form">
-                    <input name="keyword" type="text" value="搜美食、搜商家、吃货的世界" onFocus="this.value = '';" onBlur="if (this.value == '') {this.value = '';}">
-                    <input type="submit" value="">
-                </form> -->
-                <div class="search-inner-div">
-                    <input name="keyword" type="text">
-                    <button class="submit-btn"></button>
+                <a href="{% url 'mainpage:location' %}" style="margin-left:170px;font-size: 1em;color:#000;text-decoration: none;">My Position</a>
+            </div>
+            <div class="contact-in">
+                <h2>Location</h2>
+                <div id="allmap">
                 </div>
-                <script type="text/javascript">
-                    function myFun(result) {
-                        var cityName = result.name;
-                        $(".my-location").text(cityName);
-                    }
-                    var myCity = new BMap.LocalCity();
-                    myCity.get(myFun);
-
-                    $("button.submit-btn").click(function () {
-                        alert("search clicked");
-                        var keywords = $.trim($(".search-inner-div input:first").val());
-                        console.log("搜索关键词：" + keywords);
-                        if (keywords != "") {
-                            queryShop(keywords);
-                        }
-
-
-                    });
-
-                </script>
+            </div>
+            <div class="footer">
+                <div class="container">
+                    <div class="footer-bottom ">
+                        <p class="footer-grid">Copyright &copy; ZIYANG WANG &amp; MIAO GAO</p>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
             </div>
         </div>
-        {#        <div class="banner">#}
-        {#            <div class="banner-in">#}
-        {#                <!---->#}
-        {#                <div class="wmuSlider example1">#}
-        {#                    <div class="wmuSliderWrapper">#}
-        {#                        <article style="position: absolute; width: 100%; opacity: 0;">#}
-        {#                            <div class="banner-wrap">#}
-        {#                                <h2>Raesent coodo </h2>#}
-        {#                                <h5>Mollis voluipun</h5>#}
-        {#                                <p>Neque rutrum <span>enmos ligu sed lorbei</span></p>#}
-        {#                            </div>#}
-        {#                        </article>#}
-        {#                        <article style="position: absolute; width: 100%; opacity: 0;">#}
-        {#                            <div class="banner-wrap">#}
-        {#                                <h2>Raesent </h2>#}
-        {#                                <h5>Mollis voluipun</h5>#}
-        {#                                <p>Neque rutrum <span>enmos ligu sed lorbei</span></p>#}
-        {#                            </div>#}
-        {#                        </article>#}
-        {#                        <article style="position: absolute; width: 100%; opacity: 0;">#}
-        {#                            <div class="banner-wrap">#}
-        {#                                <h2>coodo </h2>#}
-        {#                                <h5>Mollis voluipun</h5>#}
-        {#                                <p>Neque rutrum <span>enmos ligu sed lorbei</span></p>#}
-        {#                            </div>#}
-        {#                        </article>#}
-        {#                    </div>#}
-        {#                </div>#}
-        {#                <!---->#}
-        {#                <script src="{% static 'mainpage/js/jquery.wmuSlider.js' %}"></script>#}
-        {#                <script>#}
-        {#                    $('.example1').wmuSlider({#}
-        {#                        pagination: true,#}
-        {#                    });#}
-        {#                </script>#}
-        {#                <!---->#}
-        {#            </div>#}
-        {#        </div>#}
-
     </div>
-</div>
-{#<div class="container">#}
-{#    <div class="contact-in">#}
-{#        <h2>Locations</h2>#}
-{#        <div class="clearfix"></div>#}
-{#    </div>#}
-{#</div>#}
-<div class="contact-in">
-    <h2>Lcation</h2>
-    <div id="allmap">
-    </div>
-</div>
+    <script>
+    var loc = { lat: -34.397, lng: 150.644 };
+    var requestBody = {
+        "homeMobileCountryCode": 310,
+        "homeMobileNetworkCode": 410,
+        "radioType": "gsm",
+        "carrier": "Vodafone",
+        "considerIp": "true",
+        "cellTowers": [
+            // See the Cell Tower Objects section below.
+        ],
+        "wifiAccessPoints": [
+            // See the WiFi Access Point Objects section below.
+        ]
+    };
+    // console.log(typeof requestBody);
 
-<script type="text/javascript">
-    var ip;
-    var loc_url = '';
-    $(document).ready(function () {
-        $.getJSON("http://jsonip.com/?callback=?", function (data) {
-            ip = data.ip;
-            loc_url = "https://api.map.baidu.com/highacciploc/v1?qcip=" + ip + "&qterm=pc&ak=rEBP1W4qQuU4ZGNpAEIvgY9aIGKddNih&coord=bd09ll&callback_type=jsonp&callback=test";
-            console.log(loc_url);
-            $.ajax({
-                type: "get",
-                async: false,
-                url: loc_url,
-                dataType: "jsonp",
-                jsonp: "callback",
-                success: function (msg) {
-                    var jsonObj = eval(msg);
-                    if (jsonObj.result.error == 161) {
-                        var latitude = jsonObj.content.location.lat;
-                        var longitude = jsonObj.content.location.lng;
-                        console.log(latitude);
-                        console.log(longitude);
-                        var map = new BMap.Map("allmap"); // 创建Map实例
-                        var curr_loc = new BMap.Point(longitude, latitude);
-                        map.centerAndZoom(curr_loc, 13);
-                        map.enableScrollWheelZoom(true);
-                        map.addControl(new BMap.MapTypeControl());
-                        map.clearOverlays();
-                        var marker = new BMap.Marker(curr_loc); // 创建标注
-                        map.addOverlay(marker); // 将标注添加到地图中
-                        map.panTo(curr_loc);
-                    }
-                }
-            });
+    var map;
+
+    function initMap() {
+        $.ajax({
+            type: 'POST',
+            url: 'https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyCHPr9Sea5pe5xafX5R-fPFNsUXnOOVX-0',
+            data: JSON.stringify(requestBody),
+            success: function(data) {
+                console.log(data);
+                console.log(data['location']);
+                loc = data['location'];
+                map = new google.maps.Map(document.getElementById('allmap'), {
+                    center: loc,
+                    zoom: 16
+                });
+            },
+            contentType: "application/json",
+            dataType: "json"
         });
-    });
-</script>
 
-<div class="footer">
-    <div class="container">
-        <div class="footer-bottom ">
-            <p class="footer-grid">Copyright &copy; 913106840634_王子扬 & 913106840638_汤林鸿</p>
-        </div>
-        <div class="clearfix"></div>
-    </div>
-</div>
+    }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAmhdRPxlmIYWS_VhIXLevV6FH8pa7JpVM&callback=initMap" async defer></script>Ï
 </body>
 
 </html>

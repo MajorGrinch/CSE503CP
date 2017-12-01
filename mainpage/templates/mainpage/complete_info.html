@@ -105,73 +105,73 @@ $(document).ready(function() {
 
     });
 
-    $(".province_select").blur(function() {
-        if ($(this).get(0).selectedIndex == 0) {
+    // $(".province_select").blur(function() {
+    //     if ($(this).get(0).selectedIndex == 0) {
 
-            $(".selectTip").css("visibility", "visible").text("请选择省份!");
-        }
-    });
+    //         $(".selectTip").css("visibility", "visible").text("Please fill in province");
+    //     }
+    // });
 
-    $(".city_select").blur(function() {
-        if ($(".province_select").get(0).selectedIndex != 0 && $(this).get(0).selectedIndex == 0) {
-            $(".selectTip").css("visibility", "visible").text("请选择城市!");
-        }
-
-
-    });
-
-    $(".xian_select").blur(function() {
-        //alert($(".province_select").get(0).selectedIndex);
-        if ($(".province_select").get(0).selectedIndex != 0 && $(".city_select").get(0).selectedIndex != 0 && $(this).get(0).selectedIndex == 0) {
-            //alert("test");
-            $(".selectTip").css("visibility", "visible").text("请选择区县!");
-        } else if ($(".province_select").get(0).selectedIndex == 0) {
-            $(".selectTip").css("visibility", "visible").text("请选择省份!");
-        } else if ($(".province_select").get(0).selectedIndex != 0 && $(".city_select").get(0).selectedIndex == 0) {
-            $(".selectTip").css("visibility", "visible").text("请选择城市!");
-        }
-
-    });
-
-    $(".province_select").focus(function() {
-        if ($("selectTip").val() == "请选择省份!") {
-            $(".selectTip").css("visibility", "hidden");
-        }
-    });
+    // $(".city_select").blur(function() {
+    //     if ($(".province_select").get(0).selectedIndex != 0 && $(this).get(0).selectedIndex == 0) {
+    //         $(".selectTip").css("visibility", "visible").text("Please fill in city");
+    //     }
 
 
-    $(".city_select").focus(function() {
-        if ($("selectTip").val() == "请选择城市!") {
-            $(".selectTip").css("visibility", "hidden");
+    // });
 
-        }
+    // $(".xian_select").blur(function() {
+    //     //alert($(".province_select").get(0).selectedIndex);
+    //     if ($(".province_select").get(0).selectedIndex != 0 && $(".city_select").get(0).selectedIndex != 0 && $(this).get(0).selectedIndex == 0) {
+    //         //alert("test");
+    //         $(".selectTip").css("visibility", "visible").text("County");
+    //     } else if ($(".province_select").get(0).selectedIndex == 0) {
+    //         $(".selectTip").css("visibility", "visible").text("请选择省份!");
+    //     } else if ($(".province_select").get(0).selectedIndex != 0 && $(".city_select").get(0).selectedIndex == 0) {
+    //         $(".selectTip").css("visibility", "visible").text("请选择城市!");
+    //     }
+
+    // });
+
+    // $(".province_select").focus(function() {
+    //     if ($("selectTip").val() == "请选择省份!") {
+    //         $(".selectTip").css("visibility", "hidden");
+    //     }
+    // });
 
 
-    });
+    // $(".city_select").focus(function() {
+    //     if ($("selectTip").val() == "请选择城市!") {
+    //         $(".selectTip").css("visibility", "hidden");
 
-    $(".xian_select").focus(function() {
-        if ($("selectTip").val() == "请选择区县!") {
-            $(".selectTip").css("visibility", "hidden");
-        }
-    });
+    //     }
 
-    $(".streetTextArea").blur(function() {
-        if ($.trim($(this).val()) == "") {
-            $(".streetTip").css("visibility", "visible");
-        }
-    });
 
-    $(".postcodeInput").blur(function() {
-        if ($.trim($(this).val()) == "") {
-            $(".postcodeTip").css("visibility", "visible");
-        }
-    });
+    // });
 
-    $(".consigneeInput").blur(function() {
-        if ($.trim($(this).val()) == "") {
-            $(".consigneeTip").css("visibility", "visible");
-        }
-    });
+    // $(".xian_select").focus(function() {
+    //     if ($("selectTip").val() == "请选择区县!") {
+    //         $(".selectTip").css("visibility", "hidden");
+    //     }
+    // });
+
+    // $(".streetTextArea").blur(function() {
+    //     if ($.trim($(this).val()) == "") {
+    //         $(".streetTip").css("visibility", "visible");
+    //     }
+    // });
+
+    // $(".postcodeInput").blur(function() {
+    //     if ($.trim($(this).val()) == "") {
+    //         $(".postcodeTip").css("visibility", "visible");
+    //     }
+    // });
+
+    // $(".consigneeInput").blur(function() {
+    //     if ($.trim($(this).val()) == "") {
+    //         $(".consigneeTip").css("visibility", "visible");
+    //     }
+    // });
 
     $(".phoneInput").blur(function() {
         if ($.trim($(this).val()) == "") {
@@ -293,40 +293,40 @@ $(document).ready(function() {
 
     $(".addr_modal_ensure").click(function() {
         var flag = true;
-        if ($(".province_select").val() == "--省份--") {
+        if ($(".province_select").val() == "") {
             flag = false;
-            $(".selectTip").css("visibility", "visible").text("请选择省份!");
-        } else if ($(".city_select").val() == "--城市--") {
+            $(".selectTip").css("visibility", "visible").text("Please fill the province");
+        } else if ($(".city_select").val() == "") {
             flag = false;
-            $(".selectTip").css("visibility", "visible").text("请选择城市!");
+            $(".selectTip").css("visibility", "visible").text("Please fill the city");
 
-        } else if ($(".xian_select").val() == "--区县--") {
+        } else if ($(".xian_select").val() == "") {
             flag = false;
-            $(".selectTip").css("visibility", "visible").text("请选择区县!");
+            $(".selectTip").css("visibility", "visible").text("Choose county!");
         }
 
         if ($.trim($(".streetTextArea").val()) == "") {
             flag = false;
-            $(".streetTip").css("visibility", "visible").text("请填写街道!");
+            $(".streetTip").css("visibility", "visible").text("Fill in the street");
         }
 
         if ($.trim($(".postcodeInput").val()) == "") {
             flag = false;
-            $(".postcodeTip").css("visibility", "visible").text("请填写邮编!");
+            $(".postcodeTip").css("visibility", "visible").text("Zipcode");
         }
 
         if ($.trim($(".consigneeInput").val()) == "") {
             flag = false;
-            $(".consigneeTip").css("visibility", "visible").text("请填写收货人姓名!");
+            $(".consigneeTip").css("visibility", "visible").text("Consignee!");
         }
         if ($.trim($(".phoneInput").val()) == "") {
             flag = false;
-            $(".phoneTip").css("visibility", "visible").text("请填写手机号!");
+            $(".phoneTip").css("visibility", "visible").text("Cellphone Number");
         }
         if (flag == true) {
-            shengfen = $(".province_select option:selected").text();
-            chengshi = $(".city_select option:selected").text();
-            quxian = $(".xian_select option:selected").text();
+            shengfen = $(".province_select").val();
+            chengshi = $(".city_select").val();
+            quxian = $(".xian_select").val();
             jiedao = $.trim($(".streetTextArea").val());
             youbian = $.trim($(".postcodeInput").val());
             shouhuoren = $.trim($(".consigneeInput").val());
@@ -337,9 +337,9 @@ $(document).ready(function() {
             //将地址信息更新到完善信息页面中的div addr-list中
             $('<form></form>').appendTo(".addr-list");
             $(".addr-list form").addClass("customer-form");
-            $('<tr><th>收货人</th><th>收货地址</th><th>手机号</th></tr>').appendTo(".customer-form");
+            $('<tr><th>Consignee</th><th>Address</th><th>Cellphone</th></tr>').appendTo(".customer-form");
             $('<tr><td>' + shouhuoren + '</td><td>' + shengfen + chengshi + quxian + jiedao + ' ' + youbian + '</td><td>' + shoujihao + '</td></tr>').appendTo(".customer-form");
-            //将激发模态框的label隐藏起来，只允许添加一个地址，设为默认地址；
+            //hide modal to set this as default
             $(".add-address-label").css("visibility", "hidden");
 
         }
@@ -378,7 +378,7 @@ $(document).ready(function() {
             if (shoujihao == undefined) {
                 shoujihao = ''
             }
-            //将完善信息存入数据库中,且为默认地址
+            //set the address as default address
             $.post("{% url 'mainpage:complete' %}", {
                 csrfmiddlewaretoken: '{{csrf_token}}',
                 phone: completePhone,
@@ -392,14 +392,14 @@ $(document).ready(function() {
                 postcode: youbian,
                 moren: true
             }, function(result, status) {
-                if (result == 1) { //信息插入成功
-                    alert("信息插入成功");
+                if (result == 1) { //
+                    alert("Set Address successfully");
                     //转入主页；
                     location.href = "{% url 'mainpage:index' %}";
 
 
                 } else {
-                    alert("信息插入失败");
+                    alert("Set Address failed! Check your input");
                 }
 
             });
@@ -412,7 +412,6 @@ $(document).ready(function() {
 </script>
 
 <body>
-    <!-- 模态框（Modal） -->
     <div class="modal fade" id="myAddrModal" tabindex="-1" role="dialog" aria-labelledby="myAddrModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -420,85 +419,82 @@ $(document).ready(function() {
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                         &times;
                     </button>
-                    <h4 class="modal-title" id="myAddrModalLabel">填写地址</h4>
+                    <h4 class="modal-title" id="myAddrModalLabel">Fill the address</h4>
                 </div>
                 <div class="modal-body">
                     <div class="add_addr_div">
-                        <form class="form-horizontal" role="form">
+                        <form class="form-horizontal address-form" role="form">
                             <div class="form-group">
-                                <label class="col-sm-2  control-label require-label">所在地区</label>
-                                <div class "col-sm-10">
+                                <label class="col-xs-2  control-label require-label">Area</label>
+                                <div class "col-xs-10">
                                     <div class="form-group">
-                                        <div class="col-sm-4 select-div">
-                                            <select class="province_select" id="province_select_id" name="province">
-                                                <option>--省份--</option>
-                                                <option value="beijing">Beijing</option>
-                                                <option value="fujian">Fujian</option>
-                                            </select>
-                                            <select class="city_select" name="city">
-                                                <option>--城市--</option>
-                                            </select>
-                                            <select class="xian_select" name="xian">
-                                                <option>--区县--</option>
-                                            </select>
+                                        <div class="col-xs-4 select-div">
+                                            <label for="province_select_id">State</label>
+                                            <input class="province_select" id="province_select_id" name="province">
+                                            <br>
+                                            <label for="city_select_id">City</label>
+                                            <input class="city_select" id="city_select_id" name="city">
+                                            <br>
+                                            <label for="county_select_id">County</label>
+                                            <input class="xian_select" name="xian" id="county_select_id">
+
                                         </div>
-                                        <label class="col-sm-6 control-label selectTip errorTip" for="province_select_id">XXXX</label>
+                                        <label class="col-xs-6 control-label selectTip errorTip" for="province_select_id">XXXX</label>
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-2 control-label require-label">街道地址</label>
-                                <div class="col-sm-10">
+                                <label class="col-xs-2 control-label require-label">Address</label>
+                                <div class="col-xs-10">
                                     <div class="form-group">
-                                        <div class="col-sm-5">
+                                        <div class="col-xs-5">
                                             <textarea class="form-control streetTextArea"></textarea>
                                         </div>
-                                        <label class="col-sm-5 control-label streetTip errorTip">请填写街道地址!</label>
+                                        <label class="col-xs-5 control-label streetTip errorTip">Please fill the address!</label>
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-2 control-label require-label">邮政编码</label>
-                                <div class="col-sm-10">
+                                <label class="col-xs-2 control-label require-label">zipcode</label>
+                                <div class="col-xs-10">
                                     <div class="form-group">
-                                        <div class="col-sm-5">
+                                        <div class="col-xs-5">
                                             <input class="form-control postcodeInput"></input>
                                         </div>
-                                        <label class="col-sm-5 control-label postcodeTip errorTip">请填写邮政编码!</label>
+                                        <label class="col-xs-5 control-label postcodeTip errorTip">Please fill the zipcode!</label>
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-2 control-label require-label">收货人姓名</label>
-                                <div class="col-sm-10">
+                                <label class="col-xs-2 control-label require-label">Deliver Name</label>
+                                <div class="col-xs-10">
                                     <div class="form-group">
-                                        <div class="col-sm-5">
+                                        <div class="col-xs-5">
                                             <input class="form-control consigneeInput"></input>
                                         </div>
-                                        <label class="col-sm-5 control-label consigneeTip errorTip">请填写收货人姓名!</label>
+                                        <label class="col-xs-5 control-label consigneeTip errorTip">Please fill the consignee!</label>
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-2 control-label require-label">电话号码</label>
-                                <div class="col-sm-10">
+                                <label class="col-xs-2 control-label require-label">Cellphone</label>
+                                <div class="col-xs-10">
                                     <div class="form-group">
-                                        <div class="col-sm-5">
+                                        <div class="col-xs-5">
                                             <input class="form-control phoneInput"></input>
                                         </div>
-                                        <label class="col-sm-5 control-label phoneTip errorTip">请填写手机号!</label>
+                                        <label class="col-xs-5 control-label phoneTip errorTip">Cellphone!</label>
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-2 control-label"></label>
-                                <div class="col-sm-10">
+                                <label class="col-xs-2 control-label"></label>
+                                <div class="col-xs-10">
                                     <div class="form-group">
-                                        <div class="col-sm-8">
-                                            <button type="button" class="btn btn-success addr_modal_ensure">
-                                                确定
+                                        <div class="col-xs-8">
+                                            <button type="button" class="btn btn-success addr_modal_ensure">Confirm
                                             </button>
-                                            <a class="addr-cancle-a" href="#" data-dismiss="modal">取消</a>
+                                            <a class="addr-cancle-a" href="#" data-dismiss="modal">Cancel</a>
                                         </div>
                                     </div>
                                 </div>
@@ -506,13 +502,6 @@ $(document).ready(function() {
                         </form>
                     </div>
                 </div>
-                <!--  <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭
-                    </button>
-                    <button type="button" class="btn btn-primary">
-                        提交更改
-                    </button>
-                </div> -->
             </div>
             <!-- /.modal-content -->
         </div>
@@ -522,51 +511,51 @@ $(document).ready(function() {
     <div class="header">
         <div class="container">
             <div class="logo">
-                <a href="../index.html">点餐 <span>课设</span></a>
+                <a href="../index.html"> Online <span>Order</span></a>
             </div>
         </div>
     </div>
     <div class="complete_info_content">
         <div>
-            <h4>完善个人信息</h4>
+            <h4>Complete Personal Information</h4>
         </div>
         <form class="form-horizontal" role="form">
             <div class="form-group">
-                <label class="col-sm-2 control-label require-label">手机号</label>
+                <label class="col-sm-2 control-label require-label">Cellphone</label>
                 <div class="col-sm-10">
                     <div class="form-group">
                         <div class="col-sm-5">
                             <input class="form-control" id="phoneFocusedInput">
                         </div>
-                        <label class="col-sm-5 control-label completePhoneTip errorTip">请填写手机号!</label>
+                        <label class="col-sm-5 control-label completePhoneTip errorTip">Please fill the cellphone number!</label>
                     </div>
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-2 control-label require-label">邮箱</label>
+                <label class="col-sm-2 control-label require-label">email</label>
                 <div class="col-sm-10">
                     <div class="form-group">
                         <div class="col-sm-5">
                             <input class="form-control" id="emailFocusedInput">
                         </div>
-                        <label class="col-sm-5 control-label emailTip errorTip">请填写邮箱!</label>
+                        <label class="col-sm-5 control-label emailTip errorTip">Please fill the email number</label>
                     </div>
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-2 control-label">地址</label>
+                <label class="col-sm-2 control-label">Address</label>
             </div>
             <div class="form-group">
                 <label class="col-sm-2 control-label"></label>
                 <div class="addr-list"></div>
             </div>
             <div class="address-block form-group">
-                <label class="col-sm-3 control-label add-address-label">+添加地址</label>
+                <label class="col-sm-3 control-label add-address-label">+Add Address</label>
             </div>
             <div class="form-group">
                 <label class="col-sm-2 control-label"></label>
                 <button type="button" class="btn btn-success complete_save">
-                    保存
+                    Save
                 </button>
             </div>
         </form>
