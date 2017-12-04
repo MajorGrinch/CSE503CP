@@ -34,7 +34,9 @@
         return cookieValue;
     }
     var csrftoken = getCookie('csrftoken');
-
+    function htmlEntities(str) {
+        return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
     function show_orders() {
         console.log("execute show_orders");
         $("#orders table tbody").empty();
@@ -50,7 +52,7 @@
                 var order_time = arrayObj[i].order_time;
                 var addr = arrayObj[i].address_id_id;
                 var price = arrayObj[i].total_price;
-                var aRow = '<tr><td>' + order_num + '</td><td>' + order_time + '</td><td>' + addr + '</td><td>' + price + '</td></tr>';
+                var aRow = '<tr><td>' + order_num + '</td><td>' + order_time + '</td><td>' + htmlEntities(addr) + '</td><td>' + htmlEntities(price) + '</td></tr>';
                 $(aRow).appendTo("#orders table tbody");
             }
         });
@@ -73,7 +75,7 @@
                 var order_time = arrayObj[i].order_time;
                 var addr = arrayObj[i].address_id_id;
                 var price = arrayObj[i].total_price;
-                var aRow = '<tr><td class="orderNum">' + order_num + '</td><td>' + order_time + '</td><td>' + addr + '</td><td>' + price + '</td><td><button class=\"btn btn-default\" onclick="confirm_order('+order_num+')">Confirm</button><button class=\"btn btn-default decline_btn\">Decline</button></td></tr>';
+                var aRow = '<tr><td class="orderNum">' + order_num + '</td><td>' + order_time + '</td><td>' + htmlEntities(addr) + '</td><td>' + price + '</td><td><button class=\"btn btn-default\" onclick="confirm_order('+order_num+')">Confirm</button><button class=\"btn btn-default decline_btn\">Decline</button></td></tr>';
                 $(aRow).appendTo("#orders table tbody");
             }
             $("#target ").empty();
@@ -109,7 +111,7 @@
                 var order_time = arrayObj[i].order_time;
                 var addr = arrayObj[i].address_id_id;
                 var price = arrayObj[i].total_price;
-                var aRow = '<tr><td>' + order_num + '</td><td>' + order_time + '</td><td>' + addr + '</td><td>' + price + '</td></tr>';
+                var aRow = '<tr><td>' + order_num + '</td><td>' + order_time + '</td><td>' + htmlEntities(addr) + '</td><td>' + price + '</td></tr>';
                 $(aRow).appendTo("#orders table tbody");
                 $("#target ").empty();
                 var info = "<h3 class=\"panel-title\"><i class=\"fa fa-money\"></i> Delivered Orders</h3>";
@@ -330,10 +332,10 @@
             <!-- /.row -->
             <div class="row">
                 <div class="col-lg-12">
-                    <h2>销售历史</h2>
+                    <h2>History</h2>
                     <div class="panel panel-primary">
                         <div class="panel-heading">
-                            <h3 class="panel-title"><i class="fa fa-bar-chart-o"></i> 当月销量表</h3>
+                            <h3 class="panel-title"><i class="fa fa-bar-chart-o"></i> Current Salesnum</h3>
                         </div>
                         <div class="panel-body">
                             <div id="morris-chart-area"></div>

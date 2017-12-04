@@ -1,3 +1,6 @@
+function htmlEntities(str) {
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
 function getCookie(name) {
     var cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -25,7 +28,7 @@ function recalculateTotalPrice($table) {
     });
     var deliverFee = parseInt($table.find("span.deliver-dollar").text());
     totalPrice += deliverFee;
-    $table.find("span.total-price").text(totalPrice);
+    $table.find("span.total-price").text(htmlEntities(totalPrice));
 }
 
 function recalculateTotalPriceByGoodCountInputChange($goodCountInput) {
@@ -60,7 +63,7 @@ function initialTable() {
                 shopName = shop_info[shopId].shopname;
                 shopDeliverFee = shop_info[shopId].deliver_fee;
                 console.log(shopName);
-                $('<table id="customers" data-shop-id=' + shopId + '><thead><th colspan="3" class="shop-name-th">' + shopName + '</th></thead><tbody></tbody>').appendTo(".shoppingcar-container");
+                $('<table id="customers" data-shop-id=' + shopId + '><thead><th colspan="3" class="shop-name-th">' + htmlEntities(shopName) + '</th></thead><tbody></tbody>').appendTo(".shoppingcar-container");
                 var $tableBody = $(".shoppingcar-container #customers:last").find("tbody");
                 for (var kk in itemsObj) {
                     var merchId = kk;
@@ -72,8 +75,8 @@ function initialTable() {
                     foodPrice = itemsObj[kk].price;
                     foodName = itemsObj[kk].food_name;
                     foodImg = itemsObj[kk].food_img;
-                    aRow = '<tr><td width="60%" colspan="2" class="description"><ul><li><img data-food-id=' + merchId + ' src=\"/media/' + foodImg + '\"  class="food-img"></li><li><div class="shoppingcar-description"><p>' + foodName + '</p><p><span class="count">' + merchanCount + '</span><span class="multiply">x</span><span class="dollar">' +
-                        foodPrice + '</span></p></div></li></ul></td><td width="40%" class="operation"><ul><li><button class="decrease">-</button><input class="good-count" type="text" value=' + merchanCount + '></input><button class="plus">+</button></li><li class="delete-li"><button class="btn btn-danger delete">Delete</button></li></ul></td></tr>';
+                    aRow = '<tr><td width="60%" colspan="2" class="description"><ul><li><img data-food-id=' + merchId + ' src=\"/media/' + foodImg + '\"  class="food-img"></li><li><div class="shoppingcar-description"><p>' + htmlEntities(foodName) + '</p><p><span class="count">' + htmlEntities(merchanCount) + '</span><span class="multiply">x</span><span class="dollar">' +
+                        htmlEntities(foodPrice) + '</span></p></div></li></ul></td><td width="40%" class="operation"><ul><li><button class="decrease">-</button><input class="good-count" type="text" value=' + htmlEntities(merchanCount) + '></input><button class="plus">+</button></li><li class="delete-li"><button class="btn btn-danger delete">Delete</button></li></ul></td></tr>';
                     $tableBody.append(aRow);
                     //  total_price += foodPrice * merchanCount;
 
@@ -94,7 +97,7 @@ function initialTable() {
 
 
                 $(this).prev().val(currentCount);
-                $(this).parents("td").siblings().find("span.count").text(currentCount);
+                $(this).parents("td").siblings().find("span.count").text(html(currentCount));
                 recalculateTotalPrice($(this).parents("table"));
                 $
             });
@@ -108,7 +111,7 @@ function initialTable() {
 
 
                     $(this).next().val(currentCount);
-                    $(this).parents("td").siblings().find("span.count").text(currentCount);
+                    $(this).parents("td").siblings().find("span.count").text(htmlEntities(currentCount));
                     recalculateTotalPrice($(this).parents("table"));
 
                 }

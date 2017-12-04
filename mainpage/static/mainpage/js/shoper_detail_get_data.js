@@ -1,4 +1,6 @@
-
+function htmlEntities(str) {
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
 function getCookie(name) {
     var cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -33,11 +35,11 @@ function getAllFoods(shopId) {
              var aRow;
             if ((i + 1) % 3 == 0) {
                 console.log("hahahahah");
-                 aRow = '<div class="col-md-4 cup-in" style="margin-right:0"><a href="#"><img src=\"/media/' + shopImagePath + '\" class="img-responsive" alt=""></a><p>' + foodName + '</p><span class="dollar">' + foodPrice + '</span>' + '<div class="details-in"><a href="#" class="details" data-food-id=' + foodId + ' data-shop-id=' + shop_id + '>+</a></div><div class="clearfix"></div></div>';
+                 aRow = '<div class="col-md-4 cup-in" style="margin-right:0"><a href="#"><img src=\"/media/' + shopImagePath + '\" class="img-responsive" alt=""></a><p>' + htmlEntities(foodName) + '</p><span class="dollar">' + htmlEntities(foodPrice) + '</span>' + '<div class="details-in"><a href="#" class="details" data-food-id=' + htmlEntities(foodId) + ' data-shop-id=' + htmlEntities(shop_id) + '>+</a></div><div class="clearfix"></div></div>';
 
             }else{
                 console.log("22");
-                 aRow = '<div class="col-md-4 cup-in"><a href="#"><img src=\"/media/' + shopImagePath + '\" class="img-responsive" alt=""></a><p>' + foodName + '</p><span class="dollar">' + foodPrice + '</span>' + '<div class="details-in"><a href="#" class="details" data-food-id=' + foodId + ' data-shop-id=' + shop_id + '>+</a></div><div class="clearfix"></div></div>';
+                 aRow = '<div class="col-md-4 cup-in"><a href="#"><img src=\"/media/' + shopImagePath + '\" class="img-responsive" alt=""></a><p>' + htmlEntities(foodName) + '</p><span class="dollar">' + htmlEntities(foodPrice) + '</span>' + '<div class="details-in"><a href="#" class="details" data-food-id=' + htmlEntities(foodId) + ' data-shop-id=' + htmlEntities(shop_id) + '>+</a></div><div class="clearfix"></div></div>';
 
             }
             $(".cup").append(aRow);
@@ -59,11 +61,11 @@ function getShoperInfo(shopId) {
         var shopImage = obj.shop_img;
         var shopAddress = obj.address;
         var shopPhone = obj.cellphone;
-        $(".part-detail-ul li.shop-name").text(shopName);
-        $(".part-detail-ul li.illustration").text("least price: " + leastPrice + " $, deliver fee" + deliverFee + " $");
-        $(".dropdown-content p:first").html("<b>Address: </b>" + shopAddress);
-        $(".dropdown-content p:last").html("<b>Cellphone: </b>" + shopPhone);
-        $(".shop-detail-right-ul li:first p:first").html("<b>" + commentScore + "</b>");
+        $(".part-detail-ul li.shop-name").text(htmlEntities(shopName));
+        $(".part-detail-ul li.illustration").text("least price: " + htmlEntities(leastPrice) + " $, deliver fee" + htmlEntities(deliverFee) + " $");
+        $(".dropdown-content p:first").html("<b>Address: </b>" + htmlEntities(shopAddress));
+        $(".dropdown-content p:last").html("<b>Cellphone: </b>" + htmlEntities(shopPhone));
+        $(".shop-detail-right-ul li:first p:first").html("<b>" + htmlEntities(commentScore) + "</b>");
     });
 }
 

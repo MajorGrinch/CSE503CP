@@ -5,6 +5,9 @@ var get_addr_count_url;
 var limits=5; //每页最多展示多少条地址信息;
 var show_count = 3; //页面上可选择的页码的数量；
 
+function htmlEntities(str) {
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
 
 function getCookie(name) {
     var cookieValue = null;
@@ -25,8 +28,8 @@ var csrftoken = getCookie('csrftoken');
 
 function showChoosedPage(pageNumber) {
     $.post("/mainpage/show_first_page", { csrfmiddlewaretoken: csrftoken, pagenum: pageNumber, limits: limits }, function(data, status) {
-        $(".customer-form tbody").empty(); //先清除表格中原有的记录，
-        // data = '{"address_array":[{"id":1,"province":"福建省","city":"宁德市","county":"周宁县","street":"玛坑乡玛坑村迎祠巷6-1号","postcode":"355408","consignee":"汤林鸿","tel":"15205148560","is_default":1},{"id":2,"province":"福建省","city":"宁德市","county":"周宁县","street":"玛坑乡玛坑村迎祠巷6-1号","postcode":"355408","consignee":"汤林鸿","tel":"15205148560","is_default":0}]}';
+        $(".customer-form tbody").empty(); //remove all record first
+        // 
         var obj = JSON.parse(data);
         var arrayObj = obj.address_array;
         var array_len = arrayObj.length;
@@ -36,12 +39,12 @@ function showChoosedPage(pageNumber) {
             var consignee = arrayObj[i].consignee;
             var address = arrayObj[i].province + arrayObj[i].city + arrayObj[i].county + arrayObj[i].street + " " + arrayObj[i].postcode;
             var consigneePhone = arrayObj[i].consignee_tel;
-            var aRow = '<tr><td width="15%">' + consignee + '</td><td width="40%">' + address + '</td><td width="20%">' + consigneePhone + '</td><td width="25%">' + '<a href="#" class="delete_a" data-addr-id=' + addressId + '>Delete</a>';
+            var aRow = '<tr><td width="15%">' + consignee + '</td><td width="40%">' + htmlEntities(address) + '</td><td width="20%">' + htmlEntities(consigneePhone) + '</td><td width="25%">' + '<a href="#" class="delete_a" data-addr-id=' + htmlEntities(addressId) + '>Delete</a>';
             if (isDefault == 1) { //is default address
-                aRow = aRow + '<label  class="default_label" style="margin-left:3px" data-addr-id=' + addressId + '>Default Address</label></td></tr>';
+                aRow = aRow + '<label  class="default_label" style="margin-left:3px" data-addr-id=' + htmlEntities(addressId) + '>Default Address</label></td></tr>';
 
             } else {
-                aRow = aRow + '<a href="#" class="config_default_a" style="margin-left:3px" data-addr-id=' + addressId + '>Set Default</a></td></tr>';
+                aRow = aRow + '<a href="#" class="config_default_a" style="margin-left:3px" data-addr-id=' + htmlEntities(addressId) + '>Set Default</a></td></tr>';
 
             }
             $(aRow).appendTo(".customer-form tbody");
@@ -102,9 +105,9 @@ function enableOptionForForm() {
                 alert("Delete successfully!");
 
                 //reload address table
-                $.get("/mainpage/get_address_count", function(data, status) { //获得用户地址信息数
+                $.get("/mainpage/get_address_count", function(data, status) { //get number of user's address
                     addrs_total_num = data;
-                    $(".addr-list").empty();//先清除已展示的地址；
+                    $(".addr-list").empty();//remove the showed address
                     if (data == 0) {
                         isFirstAddress = 1;
                         $('<h5>You do not have an address. Please Add one.</h5>').appendTo(".addr-list");
@@ -125,7 +128,7 @@ function enableOptionForForm() {
         // event.preventDefault();
         var defaultAddressId = $(this).attr("data-addr-id");
         alert(defaultAddressId);
-        //设置默认地址，传入的参数为将要设置为默认地址的地址ID
+        //set default address
         $.post("/mainpage/conf_default_addr", { csrfmiddlewaretoken: csrftoken, default_addr_id: defaultAddressId }, function(data, status) {
             if (data == 1) {
                 alert("Set successfully!");
@@ -206,7 +209,7 @@ function achiveFunForPreviousAndNext(page_count, show_count) {
 
                     } else {
                         var pagernumTurnTo = Number($(this).children("a").html()) - 1;
-                        $(this).children("a").html(pagernumTurnTo);
+                        $(this).children("a").html(htmlEntities(pagernumTurnTo));
 
                     }
 
@@ -232,7 +235,7 @@ function achiveFunForPreviousAndNext(page_count, show_count) {
                     } else {
 
                         var pagernumTurnTo = Number($(this).children("a").html()) + 1;
-                        $(this).children("a").html(pagernumTurnTo);
+                        $(this).children("a").html(htmlEntities(pagernumTurnTo));
 
                     }
                 });

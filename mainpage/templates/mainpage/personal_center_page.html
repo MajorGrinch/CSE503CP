@@ -127,7 +127,9 @@
             }
 
         });
-
+        function htmlEntities(str) {
+            return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
 
         $(".require-label").prepend('&nbsp;<strong><font color="#FF0000">*</font></strong>&nbsp;');
         $(".personal-center-content-left ul li a").click(function(event) {
@@ -138,7 +140,7 @@
                 if ($(this)[0].name === "account-a") { //选中的是我的账号模块
 
                     var username = "{{user.username}}"; //将session中的用户名赋给usermane;
-                    $(".row-username").html(username);
+                    $(".row-username").html(htmlEntities(username));
 
                     /*
                      *从数据库中获得当前登陆用户的手机号，邮箱，此处在正式应用时应做缓存处理，

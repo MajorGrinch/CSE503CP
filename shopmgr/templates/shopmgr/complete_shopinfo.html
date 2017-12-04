@@ -31,7 +31,9 @@
         }
         return cookieValue;
     }
-
+    function htmlEntities(str) {
+        return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
     var csrftoken = getCookie('csrftoken');
     $(document).ready(function() {
         console.log("ready!");
@@ -54,7 +56,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="{% url 'mainpage:index' %}">点餐 课设</a>
+                <a class="navbar-brand" href="{% url 'mainpage:index' %}">Online Order</a>
             </div>
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse navbar-ex1-collapse">

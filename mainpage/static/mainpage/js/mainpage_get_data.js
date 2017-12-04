@@ -1,6 +1,9 @@
 var shop_limit = 6;
 var cur_page;
 
+function htmlEntities(str) {
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
 function getCookie(name) {
     var cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -20,7 +23,7 @@ var csrftoken = getCookie('csrftoken');
 
 function getShopInfoBySalesOrComments(condition, pagenum) {
     if (pagenum >= 1) {
-        var success = true; //标志数据库中是否存在该所需页,在底下的条件中当未取到数据时设置success=false,并进行提醒
+        var success = true;
         switch (condition) {
             case "sales":
                 $.post("/mainpage/show_shops_orderby_sales",{page_num:pagenum,limits:6, csrfmiddlewaretoken: csrftoken},function(data,status){
@@ -41,7 +44,7 @@ function getShopInfoBySalesOrComments(condition, pagenum) {
 
 function getShopInfoByLeastPrice(price, pagenum) {
     if (pagenum >= 1) {
-        var success = true; //标志数据库中是否存在该所需页,在底下的条件中当未取到数据时设置success=false，并进行提醒
+        var success = true; 
         if (price == "全部商家") {
            // alert("全部商家");
 
@@ -106,17 +109,17 @@ function displayShop(data){//data为json字符串；
         var aRow;
         console.log(shopName);
         if((i+1)%3==0){
-             aRow='<div class="col-md-4 cup-in" style="margin-right:0"><a href="#" data-shop-id='+shopId+'><img src=\"/media/'+shopImagePath+'\" class="img-responsive" alt=""></a><p>'
-                 +shopName+'</p><div class="mainpage-num-data"><p class="mainpage-sales-num">Sold<span class="sales-num">'+shopSalesTotalNum+'</span></p><p class="mainpage-score-comment">Rating<span class="score-comment">'
-                 +shopReviewScore+'</span>point</p></div><div class="details-in"><p>least price<span class="deliver-min-price">'+shopLeastPrice+'</span>$, delivery fee<span class="deliver_fee">'
-                 +shopDeliverFee+'</span>$</p></div><div class="clearfix"></div></div>';
+             aRow='<div class="col-md-4 cup-in" style="margin-right:0"><a href="#" data-shop-id='+htmlEntities(shopId)+'><img src=\"/media/'+htmlEntities(shopImagePath)+'\" class="img-responsive" alt=""></a><p>'
+                 +htmlEntities(shopName)+'</p><div class="mainpage-num-data"><p class="mainpage-sales-num">Sold<span class="sales-num">'+htmlEntities(shopSalesTotalNum)+'</span></p><p class="mainpage-score-comment">Rating<span class="score-comment">'
+                 +htmlEntities(shopReviewScore)+'</span>point</p></div><div class="details-in"><p>least price<span class="deliver-min-price">'+htmlEntities(shopLeastPrice)+'</span>$, delivery fee<span class="deliver_fee">'
+                 +htmlEntities(shopDeliverFee)+'</span>$</p></div><div class="clearfix"></div></div>';
 
 
         }else{
-            aRow='<div class="col-md-4 cup-in"><a href="#" data-shop-id='+shopId+'><img src=\"/media/'+shopImagePath+'\" class="img-responsive" alt=""></a><p>'
-                 +shopName+'</p><div class="mainpage-num-data"><p class="mainpage-sales-num">Sold<span class="sales-num">'+shopSalesTotalNum+'</span></p><p class="mainpage-score-comment">Rating<span class="score-comment">'
-                 +shopReviewScore+'</span>points</p></div><div class="details-in"><p>least price<span class="deliver-min-price">'+shopLeastPrice+'</span>$, delivery fee<span class="deliver_fee">'
-                 +shopDeliverFee+'</span>$</p></div><div class="clearfix"></div></div>';
+            aRow='<div class="col-md-4 cup-in"><a href="#" data-shop-id='+htmlEntities(shopId)+'><img src=\"/media/'+htmlEntities(shopImagePath)+'\" class="img-responsive" alt=""></a><p>'
+                 +htmlEntities(shopName)+'</p><div class="mainpage-num-data"><p class="mainpage-sales-num">Sold<span class="sales-num">'+htmlEntities(shopSalesTotalNum)+'</span></p><p class="mainpage-score-comment">Rating<span class="score-comment">'
+                 +htmlEntities(shopReviewScore)+'</span>points</p></div><div class="details-in"><p>least price<span class="deliver-min-price">'+htmlEntities(shopLeastPrice)+'</span>$, delivery fee<span class="deliver_fee">'
+                 +htmlEntities(shopDeliverFee)+'</span>$</p></div><div class="clearfix"></div></div>';
 
 
         }
@@ -131,7 +134,7 @@ function queryShop(keywords){//根据顶部搜索栏的搜索词进行搜索
         if(data!=0){//当有符合搜索条件的结果时返回JSON字符串，否则返回0
             displayShop(data);
         }else{
-            alert("对不起，找不到您要的美食哦！");
+            alert("sorry can't find your food");
         }
     });
 

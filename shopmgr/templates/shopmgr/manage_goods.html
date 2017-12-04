@@ -41,9 +41,9 @@
             good_id: good_id
         }, function(data, status) {
             if (data == 1) {
-                location.reload();
+                location.reload(true);
             } else {
-                alert("删除失败");
+                alert("delete failed");
             }
         });
     }
